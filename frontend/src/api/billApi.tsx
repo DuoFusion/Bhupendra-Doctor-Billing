@@ -1,0 +1,69 @@
+import axios from "axios";
+import { URL_KEYS } from "../constants/Url";
+
+const API = axios.create({
+  baseURL: "http://localhost:7000",
+  withCredentials: true,
+});
+
+export const getAllBills = async () => {
+  const response = await API.get(URL_KEYS.BILL.GET_BILLS);
+  return response.data;
+};
+
+export const getBillById = async (id: string) => {
+  const response = await API.get(
+    URL_KEYS.BILL.GET_BILL_BY_ID.replace(":id", id)
+  );
+  return response.data.bill;
+};
+
+export const addBill = async (data: {
+  company?: string;
+  billStatus?: string;
+  user: string;
+  items: {
+    product: string;
+    qty: number;
+    freeQty?: number;
+    discount?: number;
+  }[];
+  paymentMethod: string;
+  discount?: number;
+}) => {
+  const response = await API.post(
+    URL_KEYS.BILL.ADD_BILL,
+    data
+  );
+  return response.data;
+};
+
+export const updateBill = async (
+  id: string,
+  data: {
+    company?: string;
+    billStatus?: string;
+    user: string;
+    items: {
+      product: string;
+      qty: number;
+      freeQty?: number;
+      discount?: number;
+    }[];
+    paymentMethod: string;
+    discount?: number;
+  }
+) => {
+  const response = await API.put(
+    URL_KEYS.BILL.UPDATE_BILL.replace(":id", id),
+    data
+  );
+  return response.data;
+};
+
+export const deleteBill = async (id: string) => {
+  const response = await API.delete(
+    URL_KEYS.BILL.DELETE_BILL.replace(":id", id)
+  );
+  return response.data;
+};

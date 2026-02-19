@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+body {
+  background: #f4f6f9;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+}
+
+.invoice-wrapper {
+  width: 100%;          
+  max-width: 1000px;    
+  margin: 30px auto;
+  background: #ffffff;
+  padding: 20px;
+  border: 1px solid #dcdfe4;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 25px;
+  border-bottom: 2px solid #111;
+}
+
+.company-info h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: brown;
+}
+
+.company-info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.invoice-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: brown;
+}
+
+.invoice-header p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 30px;
+  font-size: 14px;
+  table-layout: fixed; 
+}
+
+.invoice-table thead {
+  background: #111;
+  color: white;
+}
+
+.invoice-table th {
+  padding: 5px;
+  font-weight: 600;
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.invoice-table td {
+  padding: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+  color: #000;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.invoice-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.summary {
+  width: 350px;
+  margin-left: auto;
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  color: #000;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-total {
+  font-weight: 700;
+  font-size: 16px;
+  background: #f2f2f2;
+  color: #000;
+}
+
+.footer {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+}
+
+.button-wrapper {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.btn {
+  padding: 10px 25px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.btn-download , .btn-print {
+  background: #007bff;
+  color: white;
+  transition: .2s all ease-in-out;
+}
+.btn-download:hover{
+  background-color:#20446b;
+}
+.btn-print:hover{
+  background-color:#20446b;
+}
+
+
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .button-wrapper {
+    display: none;
+  }
+
+  .invoice-wrapper {
+    border: none;
+    margin: 0;
+  }
+}
+
+
+
+
+/*Error: Attempting to parse an unsupported color function "oklch"*/
