@@ -1,9 +1,9 @@
-import React from 'react'
+import ResetForgetPasswordForm from "./ResetForgetPasswordForm";
 
 const VerifyOtpAndChangePass = () => {
   return (
-    <div>
-      
+    <div className="h-screen">
+      <ResetForgetPasswordForm />
     </div>
   )
 }

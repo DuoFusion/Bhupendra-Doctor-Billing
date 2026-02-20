@@ -5,6 +5,7 @@ export interface OTPDocument extends Document {
   email: string;
   otp: string;
   expireAt: Date;
+  purpose: "signin" | "reset";
 }
 
 const otpSchema = new mongoose.Schema<OTPDocument>(
@@ -12,6 +13,7 @@ const otpSchema = new mongoose.Schema<OTPDocument>(
     email: { type: String,  },
     otp: { type: String,  },
     expireAt: { type: Date,  },
+    purpose: { type: String, enum: ["signin", "reset"], default: "signin" },
   },
   { timestamps: true }
 );

@@ -1,75 +1,199 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Lock, Mail, MapPin, PencilLine, Phone, UserRound } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getCurrentUser, updateUserProfile } from "../../../api/authApi";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../constants/Routes";
 
 interface Props {
   role: string;
 }
 
+interface UserData {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  role: string;
+}
+
 const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
-  const nameLabel = role === "user" ? "Medical Name" : "Full Name";
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState<Partial<UserData>>({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { data: userData, isLoading } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+  });
+
+  useEffect(() => {
+    if (userData?.user) {
+      setFormData({
+        name: userData.user.name || "",
+        email: userData.user.email || "",
+        phone: userData.user.phone || "",
+        address: userData.user.address || "",
+        city: userData.user.city || "",
+        state: userData.user.state || "",
+        pincode: userData.user.pincode || "",
+      });
+    }
+  }, [userData]);
+
+  const mutation = useMutation({
+    mutationFn: updateUserProfile,
+    onSuccess: (data) => {
+      setSuccessMessage("Profile updated successfully!");
+      setErrorMessage("");
+      if (data.user) {
+        setFormData({
+          name: data.user.name || "",
+          email: data.user.email || "",
+          phone: data.user.phone || "",
+          address: data.user.address || "",
+          city: data.user.city || "",
+          state: data.user.state || "",
+          pincode: data.user.pincode || "",
+        });
+      }
+      setTimeout(() => setSuccessMessage(""), 3000);
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.message || "Failed to update profile");
+      } else {
+        setErrorMessage("An unexpected error occurred");
+      }
+      setSuccessMessage("");
+    },
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateDetails = () => {
+    const updatePayload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+    };
+
+    mutation.mutate(updatePayload);
+  };
 
   const inputClass =
-    "w-full rounded-2xl border border-sky-500/40 bg-[#050d1c] px-5 py-4 text-base text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+    "w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30";
 
   const fieldLabelClass =
-    "mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-100";
+    "mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300";
+
+  if (isLoading) {
+    return (
+      <div className="w-full overflow-hidden rounded-3xl border border-[#244066] bg-[#0b172a]/90 p-4 sm:p-7">
+        <div className="text-center text-slate-300">Loading profile...</div>
+      </div>
+    );
+  }
+
 
   return (
-    <div className="relative w-full overflow-hidden rounded-[2rem] border border-sky-500/30 bg-gradient-to-b from-[#0d2b4b] to-[#08192f] p-6 shadow-[0_25px_65px_rgba(2,16,38,0.65)] sm:p-10">
-      <div className="mb-8 rounded-2xl border border-sky-500/40 bg-[#09203a]/80 px-6 py-6 text-center">
-        <h2 className="text-3xl font-semibold text-slate-100">Personal Information</h2>
-        <p className="mt-1 text-base text-sky-200/80">
-          Your registered details with e-Cyber Crime Portal
-        </p>
+    <div className="w-full overflow-hidden rounded-3xl border border-[#244066] bg-[#0b172a]/90 p-4 sm:p-7">
+      <div className="mb-6 rounded-2xl border border-[#2a466f] bg-[#0d1d34] px-5 py-5 text-center">
+        <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Personal Information</h2>
+        <p className="mt-1 text-sm text-slate-400">Your registered details with e-Cyber Crime Portal</p>
       </div>
 
-      <div className="space-y-6">
-        <div className="grid grid-cols-[44px_1fr] items-end gap-4">
-          <div className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-sky-500/45 bg-[#06172b] text-cyan-300">
-            <UserRound size={18} />
+      {successMessage && (
+        <div className="mb-4 rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-3 text-green-300 text-sm">
+          {successMessage}
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-300 text-sm">
+          {errorMessage}
+        </div>
+      )}
+
+      <div className="space-y-5">
+        <div className="grid grid-cols-[40px_1fr] items-end gap-3">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+            <UserRound size={16} />
           </div>
           <div>
-            <label className={fieldLabelClass}>{nameLabel}</label>
+            <label className={fieldLabelClass}>{role === "admin" ? "Full Name" : "Medical Name"}</label>
             <input
               type="text"
-              defaultValue={role === "user" ? "ABC Medical Store" : "admin"}
+              name="name"
+              value={formData.name || ""}
+              onChange={handleInputChange}
               className={inputClass}
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-[44px_1fr] items-end gap-4">
-          <div className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-sky-500/45 bg-[#06172b] text-cyan-300">
-            <Mail size={18} />
+        <div className="grid grid-cols-[40px_1fr] items-end gap-3">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+            <Mail size={16} />
           </div>
           <div>
             <label className={fieldLabelClass}>Email Address</label>
             <input
               type="email"
-              defaultValue="www.forstake999@gmail.com"
+              name="email"
+              value={formData.email || ""}
+              onChange={handleInputChange}
               className={inputClass}
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-[44px_1fr] items-end gap-4">
-          <div className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-sky-500/45 bg-[#06172b] text-cyan-300">
-            <Phone size={18} />
+        <div className="grid grid-cols-[40px_1fr] items-end gap-3">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+            <Phone size={16} />
           </div>
           <div>
             <label className={fieldLabelClass}>Phone Number</label>
             <input
               type="text"
+              name="phone"
               placeholder="Enter your mobile number"
-              defaultValue=""
+              value={formData.phone || ""}
+              onChange={handleInputChange}
               className={inputClass}
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-[44px_1fr] items-end gap-4">
-          <div className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-sky-500/45 bg-[#06172b] text-cyan-300">
-            <Lock size={18} />
+        <div className="grid grid-cols-[40px_1fr] items-end gap-3">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+            <Lock size={16} />
           </div>
           <div>
             <label className={fieldLabelClass}>Password</label>
@@ -79,40 +203,69 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
               disabled
               className={`${inputClass} cursor-not-allowed opacity-80`}
             />
-            <p className="mt-2 text-right text-sm font-medium text-sky-400 hover:underline">
+            <p
+              className="mt-2 cursor-pointer text-right text-sm font-medium text-sky-300 hover:underline"
+              onClick={() => navigate(ROUTES.AUTH.CHANGE_PASSWORD)}
+            >
               Change Password ?
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-[44px_1fr] items-end gap-4">
-          <div className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-sky-500/45 bg-[#06172b] text-cyan-300">
-            <MapPin size={18} />
+        <div className="grid grid-cols-[40px_1fr] items-end gap-3">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+            <MapPin size={16} />
           </div>
           <div>
             <label className={fieldLabelClass}>Address</label>
-            <input type="text" defaultValue="123 Main Street" className={inputClass} />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-[44px_1fr] items-end gap-4">
-          <div className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-sky-500/45 bg-[#06172b] text-cyan-300">
-            <PencilLine size={18} />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <input type="text" defaultValue="Mumbai" placeholder="City" className={inputClass} />
             <input
               type="text"
-              defaultValue="Maharashtra"
-              placeholder="State"
+              name="address"
+              value={formData.address || ""}
+              onChange={handleInputChange}
               className={inputClass}
             />
-            <input type="text" defaultValue="400001" placeholder="Pincode" className={inputClass} />
           </div>
         </div>
 
-        <button className="mt-6 w-full rounded-2xl border border-cyan-400/60 bg-gradient-to-r from-[#0f3e6d] via-[#1564ae] to-[#0999c9] py-3 text-base font-semibold tracking-wide text-white shadow-[0_12px_30px_rgba(8,74,146,0.45)] transition hover:brightness-110">
-          Update Details
+        <div className="grid grid-cols-[40px_1fr] items-end gap-3">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+            <PencilLine size={16} />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              value={formData.city || ""}
+              onChange={handleInputChange}
+              className={inputClass}
+            />
+            <input
+              type="text"
+              name="state"
+              placeholder="State"
+              value={formData.state || ""}
+              onChange={handleInputChange}
+              className={inputClass}
+            />
+            <input
+              type="text"
+              name="pincode"
+              placeholder="Pincode"
+              value={formData.pincode || ""}
+              onChange={handleInputChange}
+              className={inputClass}
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={handleUpdateDetails}
+          disabled={mutation.isPending}
+          className="mt-4 w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold tracking-wide text-white transition hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {mutation.isPending ? "Updating..." : "Update Details"}
         </button>
       </div>
     </div>

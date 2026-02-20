@@ -1,14 +1,11 @@
 import { useMemo, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCategories, deleteCategory } from "../../../api/categoryApi";
 import { getCurrentUser } from "../../../api/authApi";
 import AddCategoryForm from "./AddCategoryForm";
-import { ROUTES } from "../../../constants/Routes";
 
 const CategoryTable = () => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
@@ -43,8 +40,8 @@ const CategoryTable = () => {
   if (isError) return <p className="p-6 text-center text-red-400">{(error as any)?.response?.data?.message || "Something went wrong"}</p>;
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800">
-      <div className="px-6 py-4 border-b border-gray-800">
+    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
+      <div className="px-6 py-4 border-b border-[#213a60]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white">Category List</h2>
 
@@ -53,10 +50,10 @@ const CategoryTable = () => {
               placeholder="Search by category..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="px-3 py-2 rounded-lg text-sm bg-gray-800 border border-gray-700 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
 
-            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition shadow-md" onClick={() => setShowAdd(true)}>
+            <button className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition " onClick={() => setShowAdd(true)}>
               <Plus size={16} />
               Add Category
             </button>
@@ -65,8 +62,8 @@ const CategoryTable = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[800px] w-full text-sm text-left text-gray-300 hidden sm:table">
-          <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
+        <table className="min-w-[800px] w-full text-sm text-left text-slate-200 hidden sm:table">
+          <thead className="bg-[#10223d] text-slate-300 uppercase text-[11px] tracking-[0.08em]">
             <tr>
               <th className="px-6 py-4">Category</th>
               {isAdmin && <th className="px-6 py-4">Added By</th>}
@@ -74,15 +71,15 @@ const CategoryTable = () => {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-[#1f3557]">
             {categoriesList?.length > 0 ? (
               categoriesList.map((item: any, idx: number) => (
-                <tr key={idx} className="hover:bg-gray-800/60 transition">
+                <tr key={idx} className="hover:bg-[#122642]/70 transition">
                   <td className="px-6 py-4">{item.name}</td>
-                  {isAdmin && <td className="px-6 py-4 text-gray-400 whitespace-nowrap">Name : {item.user?.name} <br /> {item.user?.email}</td>}
+                  {isAdmin && <td className="px-6 py-4 text-slate-400 whitespace-nowrap">Name : {item.user?.name} <br /> {item.user?.email}</td>}
                   <td className="px-6 py-4">
                     <div className="flex justify-center gap-3">
-                      <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition"><Pencil size={16} /></button>
+                      <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"><Pencil size={16} /></button>
                       <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
                     </div>
                   </td>
@@ -90,7 +87,7 @@ const CategoryTable = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={isAdmin ? 3 : 2} className="text-center py-6 text-gray-400">No Categories Found</td>
+                <td colSpan={isAdmin ? 3 : 2} className="text-center py-6 text-slate-400">No Categories Found</td>
               </tr>
             )}
           </tbody>
@@ -100,22 +97,22 @@ const CategoryTable = () => {
       <div className="sm:hidden p-4 space-y-4">
         {categoriesList?.length > 0 ? (
           categoriesList.map((item: any, idx: number) => (
-            <div key={idx} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+            <div key={idx} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-white font-medium">{item.name}</h3>
-                  {isAdmin && <p className="text-sm text-gray-400">Added By: {item.user?.name}</p>}
+                  {isAdmin && <p className="text-sm text-slate-400">Added By: {item.user?.name}</p>}
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition"><Pencil size={16} /></button>
+                  <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"><Pencil size={16} /></button>
                   <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-400">No Categories Found</div>
+          <div className="text-center text-slate-400">No Categories Found</div>
         )}
       </div>
 
@@ -135,3 +132,6 @@ const CategoryTable = () => {
 };
 
 export default CategoryTable;
+
+
+

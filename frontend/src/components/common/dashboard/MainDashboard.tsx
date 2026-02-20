@@ -1,9 +1,4 @@
-import {
-  Building2,
-  Package,
-  Receipt,
-  Users,
-} from "lucide-react";
+import { Building2, Package, Receipt, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "../../../api/authApi";
 import { getAllBills } from "../../../api/billApi";
@@ -51,31 +46,31 @@ const MainDashboard = () => {
     { title: "Total Companies", value: totalCompanies, icon: Building2 },
     { title: "Total Products", value: totalProducts, icon: Package },
     { title: "Total Bills", value: totalBills, icon: Receipt },
-    ...(role === "admin"
-      ? [{ title: "Total Users", value: allUsers.length, icon: Users }]
-      : []),
+    ...(role === "admin" ? [{ title: "Total Users", value: allUsers.length, icon: Users }] : []),
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-200 p-6 space-y-10">
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="min-h-[calc(100vh-7rem)] space-y-7 bg-[#050d1c] p-3 text-slate-100 sm:p-5 lg:p-6">
+      <div className="rounded-2xl border border-[#244066] bg-gradient-to-r from-[#10233d] to-[#0b172a] px-5 py-4 sm:px-6 sm:py-5">
+        <h1 className="text-xl font-semibold text-white sm:text-2xl">Dashboard Overview</h1>
+        <p className="mt-1 text-sm text-slate-400">Track products, companies, bills, and users in one place.</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card, i) => {
           const Icon = card.icon;
           return (
             <div
               key={i}
-              className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex items-center justify-between"
+              className="rounded-2xl border border-[#244066] bg-[#0b172a]/90 p-5"
             >
-              <div>
-                <p className="text-sm text-gray-400">{card.title}</p>
-                <h2 className="text-3xl font-bold text-white mt-2">
-                  {card.value}
-                </h2>
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-slate-300">{card.title}</p>
+                <div className="rounded-lg border border-sky-400/25 bg-sky-600/20 p-2.5 text-sky-300">
+                  <Icon size={18} />
+                </div>
               </div>
-              <div className="bg-indigo-600/20 p-3 rounded-xl text-indigo-400">
-                <Icon size={24} />
-              </div>
+              <h2 className="mt-4 text-3xl font-semibold text-white">{card.value}</h2>
             </div>
           );
         })}
@@ -83,25 +78,23 @@ const MainDashboard = () => {
 
       {role === "admin" ? (
         <>
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
             <BillRecentTable bills={filteredBills} currentUserRole={role} />
             <UserRecentTable users={filteredUsers} />
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
             <ProductRecentTable products={filteredProducts} currentUserRole={role} />
             <CompanyRecentTable companies={filteredCompanies} currentUserRole={role} />
           </div>
         </>
       ) : (
         <>
-          {/* Row 1: Bills full width */}
           <div className="grid grid-cols-1 gap-6">
             <BillRecentTable bills={filteredBills} currentUserRole={role} />
           </div>
 
-          {/* Row 2: Products + Companies side-by-side */}
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid gap-6 lg:grid-cols-2">
             <ProductRecentTable products={filteredProducts} currentUserRole={role} />
             <CompanyRecentTable companies={filteredCompanies} currentUserRole={role} />
           </div>

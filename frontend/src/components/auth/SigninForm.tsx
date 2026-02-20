@@ -34,7 +34,7 @@ const SigninForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
-      <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-lg">
+      <div className="w-full max-w-md bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-8 shadow-lg">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Welcome Back
         </h2>
@@ -45,7 +45,7 @@ const SigninForm = () => {
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full px-4 py-3 bg-[#0f2037] rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
           />
 
           <input
@@ -53,10 +53,10 @@ const SigninForm = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full px-4 py-3 bg-[#0f2037] rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
           />
           <span
-            className="text-indigo-400 cursor-pointer ml-1 flex justify-end"
+            className="text-sky-300 cursor-pointer ml-1 flex justify-end"
             onClick={() => navigate(ROUTES.AUTH.FORGET_PASSWORD)}
           >
             Forget Password ?
@@ -65,7 +65,7 @@ const SigninForm = () => {
           <button
             onClick={handleSignin}
             disabled={mutation.isPending}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded-md font-medium transition"
+            className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 py-3 rounded-md font-medium transition"
           >
             {mutation.isPending ? "Signing in..." : "Sign In"}
           </button>
@@ -77,10 +77,10 @@ const SigninForm = () => {
           )}
         </div>
 
-        <p className="text-sm text-gray-400 text-center mt-6">
+        <p className="text-sm text-slate-400 text-center mt-6">
           Don’t have an account?
           <span
-            className="text-indigo-400 cursor-pointer ml-1"
+            className="text-sky-300 cursor-pointer ml-1"
             onClick={() => navigate(ROUTES.AUTH.SIGNUP)}
           >
             Sign Up
@@ -92,3 +92,4 @@ const SigninForm = () => {
 };
 
 export default SigninForm;
+

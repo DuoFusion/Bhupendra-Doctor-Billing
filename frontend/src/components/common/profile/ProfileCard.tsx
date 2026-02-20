@@ -1,4 +1,4 @@
-import { LogOut, Mail, Shield } from "lucide-react";
+import { LogOut, Mail, Phone, Shield, User } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { getCurrentUser, signout } from "../../../api/authApi";
@@ -54,44 +54,71 @@ const ProfileCard = () => {
   const name = user?.name || "";
   const email = user?.email || "";
   const role = user?.role || "";
+  const phone = user?.phone || "";
+
 
   const initial = name ? name.charAt(0).toUpperCase() : "?";
 
   return (
-    <div className="relative mt-8 w-full">
-      <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-sky-500/20 via-blue-500/10 to-cyan-400/20 blur-xl"></div>
-      <div className="relative overflow-hidden rounded-[2rem] border border-sky-500/35 bg-gradient-to-b from-[#0b2340] to-[#081427] px-7 pb-8 pt-10 shadow-[0_20px_65px_rgba(1,19,46,0.6)]">
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-r from-[#13355f]/70 via-[#0f2a4a]/70 to-[#153d70]/70"></div>
+    <div className="space-y-5">
+      <div className="overflow-hidden rounded-3xl border border-[#244066] bg-gradient-to-b from-[#10243f] to-[#081628]">
+        <div className="h-20 bg-gradient-to-r from-[#14335a] via-[#10294a] to-[#174171]" />
 
-        <div className="relative flex flex-col items-center text-center">
-          <div className="relative">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full border-4 border-sky-500/70 bg-[#2f4778] text-5xl font-bold text-white shadow-[0_12px_35px_rgba(12,45,93,0.75)]">
-              {isLoading ? "" : initial}
+        <div className="-mt-10 px-6 pb-7">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-sky-400/60 bg-[#2f4778] text-3xl font-bold text-white">
+            {isLoading ? "" : initial}
+          </div>
+
+          <div className="mt-4 text-center">
+            <h2 className="text-2xl font-semibold tracking-wide text-white">
+              {isLoading ? "Loading..." : name}
+            </h2>
+
+            <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-sky-400/35 bg-sky-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-sky-200">
+              <Shield size={12} />
+              {isLoading ? "" : role}
             </div>
-          </div>
-
-          <h2 className="mt-7 inline-block bg-blue-600/80 px-4 py-1 text-3xl font-semibold leading-none text-white">
-            {isLoading ? "Loading..." : name}
-          </h2>
-
-          <div className="mt-3 flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-1 text-xs font-medium uppercase tracking-wider text-cyan-200">
-            <Shield size={13} />
-            {isLoading ? "" : role}
-          </div>
-
-          <div className="mt-7 flex items-center gap-2 rounded-lg border border-[#1f4b7c] bg-[#091a32]/90 px-3 py-2 text-sm text-slate-200">
-            <Mail size={14} className="text-cyan-300" />
-            <span className="break-all">{isLoading ? "" : email}</span>
           </div>
 
           <button
             onClick={() => mutate()}
             disabled={isPending}
-            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-slate-600/70 bg-[#0f2441]/70 px-6 py-3 text-base font-medium text-slate-100 transition-all duration-300 hover:border-red-400/60 hover:bg-red-500/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#36557f] bg-[#10243f] px-5 py-2.5 text-sm font-medium text-slate-100 transition hover:border-red-400/60 hover:bg-red-500/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <LogOut size={16} />
+            <LogOut size={15} />
             {isPending ? "Signing out..." : "Log Out"}
           </button>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-[#244066] bg-[#0b172a]/90">
+        <div className="border-b border-[#213a60] px-5 py-3">
+          <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-300">
+            User Information
+          </h3>
+        </div>
+
+        <div className="divide-y divide-[#1f3557]">
+          <div className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
+            <span className="inline-flex items-center gap-2 text-slate-400">
+              <User size={14} /> Name
+            </span>
+            <span className="text-slate-100">{isLoading ? "" : name || "-"}</span>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
+            <span className="inline-flex items-center gap-2 text-slate-400">
+              <Mail size={14} /> Email
+            </span>
+            <span className="max-w-[65%] break-all text-right text-slate-100">{isLoading ? "" : email || "-"}</span>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
+            <span className="inline-flex items-center gap-2 text-slate-400">
+              <Phone size={14} /> Phone
+            </span>
+            <span className="text-slate-100">{phone ? phone : "Not Verified"}</span>
+          </div>
         </div>
       </div>
     </div>

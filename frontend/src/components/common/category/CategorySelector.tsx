@@ -31,11 +31,11 @@ const CategorySelector = ({ value, onChange }: { value: string; onChange: (v: st
   })();
 
   if (!userCategories || userCategories.length === 0) {
-    return <p className="text-sm text-gray-400">No categories available. Please add a category first.</p>;
+    return <p className="text-sm text-slate-400">No categories available. Please add a category first.</p>;
   }
 
   return (
-    <select name="category" value={value} onChange={(e) => onChange(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" required>
+    <select name="category" value={value} onChange={(e) => onChange(e.target.value)} className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" required>
       <option value="">Select Category</option>
       {userCategories.map((c: string) => (
         <option key={c} value={c}>{c}</option>
@@ -45,3 +45,4 @@ const CategorySelector = ({ value, onChange }: { value: string; onChange: (v: st
 };
 
 export default CategorySelector;
+

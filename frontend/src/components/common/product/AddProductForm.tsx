@@ -78,13 +78,13 @@ const AddProductForm = () => {
   if (isProductLoading || isCompaniesLoading) return <p>Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-200 p-6">
-      <div className="max-w-6xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-[#050d1c] text-slate-100 p-6">
+      <div className="max-w-6xl mx-auto bg-[#0b172a]/95 border border-[#1e3354] rounded-2xl shadow-xl p-8">
         <div className="mb-8">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition"
           >
             <ArrowLeft size={18} />
             Back
@@ -93,20 +93,20 @@ const AddProductForm = () => {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block mb-2 text-sm text-gray-400">Product Name</label>
+            <label className="block mb-2 text-sm text-slate-400">Product Name</label>
             <input
               type="text"
               name="productName"
               value={formData.productName}
               onChange={handleChange}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+              className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               placeholder="Enter product name"
               required
             />
           </div>
 
           <div>
-            <label className="block mb-2 text-sm text-gray-400">Company</label>
+            <label className="block mb-2 text-sm text-slate-400">Company</label>
             {isCompaniesLoading ? (
               <p>Loading companies...</p>
             ) : (
@@ -114,7 +114,7 @@ const AddProductForm = () => {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
                 required
               >
                 <option value="">Select Company</option>
@@ -128,30 +128,30 @@ const AddProductForm = () => {
           </div>
 
           <div>
-            <label className="block mb-2 text-sm text-gray-400">Category</label>
+            <label className="block mb-2 text-sm text-slate-400">Category</label>
             <CategorySelector value={formData.category} onChange={(v: string) => setFormData((p) => ({ ...p, category: v }))} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <input type="text" name="hsnCode" value={formData.hsnCode} onChange={handleChange} placeholder="HSN Code" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
-            <input type="text" name="batch" value={formData.batch} onChange={handleChange} placeholder="Batch" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
-            <input type="date" name="expiry" value={formData.expiry} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
+            <input type="text" name="hsnCode" value={formData.hsnCode} onChange={handleChange} placeholder="HSN Code" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
+            <input type="text" name="batch" value={formData.batch} onChange={handleChange} placeholder="Batch" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
+            <input type="date" name="expiry" value={formData.expiry} onChange={handleChange} className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <input type="number" name="mrp" value={formData.mrp} onChange={handleChange} placeholder="MRP" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
-            <input type="number" name="purchasePrice" value={formData.purchasePrice} onChange={handleChange} placeholder="Purchase Price" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
-            <input type="number" name="sellingPrice" value={formData.sellingPrice} onChange={handleChange} placeholder="Selling Price" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
+            <input type="number" name="mrp" value={formData.mrp} onChange={handleChange} placeholder="MRP" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
+            <input type="number" name="purchasePrice" value={formData.purchasePrice} onChange={handleChange} placeholder="Purchase Price" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
+            <input type="number" name="sellingPrice" value={formData.sellingPrice} onChange={handleChange} placeholder="Selling Price" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <input type="number" name="gstPercent" value={formData.gstPercent} onChange={handleChange} placeholder="GST %" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
-            <input type="number" name="stock" value={formData.stock} onChange={handleChange} placeholder="Stock Quantity" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
-            <input type="number" name="minStock" value={formData.minStock} onChange={handleChange} placeholder="Minimum Stock" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" />
+            <input type="number" name="gstPercent" value={formData.gstPercent} onChange={handleChange} placeholder="GST %" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
+            <input type="number" name="stock" value={formData.stock} onChange={handleChange} placeholder="Stock Quantity" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
+            <input type="number" name="minStock" value={formData.minStock} onChange={handleChange} placeholder="Minimum Stock" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" />
           </div>
 
           <div>
-            <label className="block mb-3 text-sm text-gray-400">Stock Status</label>
+            <label className="block mb-3 text-sm text-slate-400">Stock Status</label>
             <div className="flex flex-wrap gap-6">
               {["In Stock", "Low Stock", "Out Of Stock"].map((status) => (
                 <label key={status} className="flex items-center gap-2 cursor-pointer">
@@ -163,15 +163,15 @@ const AddProductForm = () => {
           </div>
 
           <div>
-            <label className="block mb-2 text-sm text-gray-400">Description</label>
-            <textarea name="description" rows={4} value={formData.description} onChange={handleChange} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" placeholder="Enter product description" />
+            <label className="block mb-2 text-sm text-slate-400">Description</label>
+            <textarea name="description" rows={4} value={formData.description} onChange={handleChange} className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" placeholder="Enter product description" />
           </div>
 
           {mutation.isError && <p className="text-red-400 text-sm text-center">{getErrorMessage()}</p>}
 
           <div className="flex justify-end gap-4 pt-4">
-            <button type="button" onClick={() => navigate(-1)} className="px-6 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition">Cancel</button>
-            <button type="submit" className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition shadow-md">{id ? "Update Product" : "Add Product"}</button>
+            <button type="button" onClick={() => navigate(-1)} className="px-6 py-2 rounded-lg bg-[#1f334f] hover:bg-[#29456b] transition">Cancel</button>
+            <button type="submit" className="px-6 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 transition shadow-md">{id ? "Update Product" : "Add Product"}</button>
           </div>
         </form>
       </div>
@@ -180,3 +180,4 @@ const AddProductForm = () => {
 };
 
 export default AddProductForm;
+

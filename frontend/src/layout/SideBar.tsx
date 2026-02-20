@@ -7,7 +7,7 @@ import {
   UserPlus,
   X,
   UserCircle,
-  FileText
+  FileText,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { getCurrentUser } from "../api/authApi";
@@ -19,7 +19,6 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
-  
   const { data } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,
@@ -37,7 +36,7 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
     { id: 3, text: "Company", path: ROUTES.COMPANY.GET_COMPANY, icon: <Building2 size={18} /> },
     { id: 4, text: "Bills", path: ROUTES.BILL.GET_BILLS, icon: <FileText size={18} /> },
     { id: 5, text: "Category", path: ROUTES.CATEGORY.GET_CATEGORIES, icon: <FileText size={18} /> },
-    { id: 6, text: "Users", path: ROUTES.ADMIN.MANAGE_USERS, icon: <UserPlus size={18} /> }
+    { id: 6, text: "Users", path: ROUTES.ADMIN.MANAGE_USERS, icon: <UserPlus size={18} /> },
   ];
 
   const userMenu = [
@@ -45,47 +44,35 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
     { id: 7, text: "Products", path: ROUTES.PRODUCTS.GET_PRODUCTS, icon: <Package size={18} /> },
     { id: 8, text: "Company", path: ROUTES.COMPANY.GET_COMPANY, icon: <Building2 size={18} /> },
     { id: 9, text: "Bills", path: ROUTES.BILL.GET_BILLS, icon: <FileText size={18} /> },
-    { id: 10, text: "Category", path: ROUTES.CATEGORY.GET_CATEGORIES, icon: <FileText size={18} /> }
+    { id: 10, text: "Category", path: ROUTES.CATEGORY.GET_CATEGORIES, icon: <FileText size={18} /> },
   ];
 
   const guestMenu = [
     { id: 10, text: "Sign In", path: ROUTES.AUTH.SIGNIN, icon: <LogIn size={18} /> },
-    { id: 11, text: "Sign Up", path: ROUTES.AUTH.SIGNUP, icon: <UserPlus size={18} /> }
+    { id: 11, text: "Sign Up", path: ROUTES.AUTH.SIGNUP, icon: <UserPlus size={18} /> },
   ];
 
-  const menu =
-    role === "admin"
-      ? adminMenu
-      : role === "user"
-      ? userMenu
-      : guestMenu;
+  const menu = role === "admin" ? adminMenu : role === "user" ? userMenu : guestMenu;
 
   return (
     <>
       {open && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 md:hidden"
-          onClick={() => setOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/70 md:hidden" onClick={() => setOpen(false)} />
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50
-        w-64 h-screen bg-gray-950 text-gray-200
-        border-r border-gray-800
-        flex flex-col justify-between
-        transform transition-transform duration-300
-        ${open ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0`}
+        className={`fixed left-0 top-0 z-50 flex h-screen w-64 flex-col justify-between border-r border-[#1f365a] bg-[#071425]/95 text-slate-100 backdrop-blur-xl transition-transform duration-300 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0`}
       >
         <div className="p-5">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-xl font-bold text-indigo-500">Medico</h2>
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-wide text-sky-300">Medico</h2>
             <button
-              className="md:hidden text-gray-400"
+              className="rounded-lg border border-[#2a466f] bg-[#0f2037] p-1.5 text-slate-300 transition hover:border-sky-400/60 hover:text-sky-200 md:hidden"
               onClick={() => setOpen(false)}
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
@@ -96,11 +83,10 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
                 to={item.path}
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-                  ${
+                  `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-md"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                      ? "bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-[0_8px_26px_rgba(29,78,216,0.35)]"
+                      : "text-slate-300 hover:bg-[#0f2037] hover:text-white"
                   }`
                 }
               >
@@ -112,27 +98,22 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
         </div>
 
         {role && (
-          <div className="p-4 border-t border-gray-800">
-                      <NavLink
-                to={ROUTES.USER.PROFILE}
-                onClick={() => setOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-                  ${
-                    isActive
-                      ? "bg-indigo-600 text-white shadow-md"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                  }`
-                }
-              >
-            <div className="flex items-center gap-3 p-2 rounded-lg transition cursor-pointer">
-              <UserCircle size={28} className="text-gray-400" />
-              <div>
-                <p className="text-sm font-medium">
-                  {data?.user?.name?.toUpperCase()}
+          <div className="border-t border-[#1f365a] p-4">
+            <NavLink
+              to={ROUTES.USER.PROFILE}
+              onClick={() => setOpen(false)}
+              className={({ isActive }) =>
+                `block rounded-xl px-2 py-2 transition ${
+                  isActive ? "bg-[#0f2037]" : "hover:bg-[#0f2037]"
+                }`
+              }
+            >
+              <div className="flex items-center gap-3 rounded-lg p-2">
+                <UserCircle size={28} className="text-slate-300" />
+                <p className="text-sm font-medium uppercase tracking-wide text-slate-200">
+                  {data?.user?.name}
                 </p>
               </div>
-            </div>
             </NavLink>
           </div>
         )}

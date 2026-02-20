@@ -19,6 +19,7 @@ import Dashboard from "../pages/global/Dashboard";
 import Profile from "../pages/global/Profile";
 import ResetForgetPassword from "../pages/auth/ResetForgetPassword";
 import VerifyOtpAndChangePass from "../components/auth/VerifyOtpAndChangePass";
+import ChangePassword from "../pages/auth/ChangePassword";
 
 const AllRoute = () => {
 
@@ -71,6 +72,7 @@ const AllRoute = () => {
             <Route path={ROUTES.ADMIN.ADD_USERS} element={<AddUser />} />
             <Route path={ROUTES.ADMIN.UPDATE_USER} element={<AddUser />} />
             <Route path={ROUTES.ADMIN.PROFILE} element={<Profile />} />
+            <Route path={ROUTES.AUTH.CHANGE_PASSWORD} element={<ChangePassword />} />
           </>
         )}
 
@@ -81,6 +83,7 @@ const AllRoute = () => {
               <Route key={r.path} path={r.path} element={r.element} />
             ))}
             <Route path={ROUTES.USER.PROFILE} element={<Profile />} />
+            <Route path={ROUTES.AUTH.CHANGE_PASSWORD} element={<ChangePassword />} />
           </>
         )}
 

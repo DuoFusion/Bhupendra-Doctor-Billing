@@ -90,14 +90,14 @@ const AddCompanyForm = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-200 p-6">
-      <div className="max-w-6xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-[#050d1c] text-slate-100 p-6">
+      <div className="max-w-6xl mx-auto bg-[#0b172a]/95 border border-[#1e3354] rounded-2xl shadow-xl p-8">
 
         <div className="mb-8">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition"
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition"
           >
             <ArrowLeft size={18} />
             Back
@@ -108,7 +108,7 @@ const AddCompanyForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 Company Name
               </label>
               <input
@@ -117,13 +117,13 @@ const AddCompanyForm = () => {
                 value={formData.companyName}
                 onChange={handleChange}
                 placeholder="Enter company name"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
                 required
               />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 GST Number
               </label>
               <input
@@ -132,12 +132,12 @@ const AddCompanyForm = () => {
                 value={formData.gstNumber}
                 onChange={handleChange}
                 placeholder="Enter GST number"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 Phone Number
               </label>
               <input
@@ -146,14 +146,14 @@ const AddCompanyForm = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Enter phone number"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 Email
               </label>
               <input
@@ -162,12 +162,12 @@ const AddCompanyForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter email"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 City
               </label>
               <input
@@ -176,12 +176,12 @@ const AddCompanyForm = () => {
                 value={formData.city}
                 onChange={handleChange}
                 placeholder="Enter city"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 State
               </label>
               <input
@@ -190,14 +190,14 @@ const AddCompanyForm = () => {
                 value={formData.state}
                 onChange={handleChange}
                 placeholder="Enter state"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 Pincode
               </label>
               <input
@@ -206,12 +206,12 @@ const AddCompanyForm = () => {
                 value={formData.pincode}
                 onChange={handleChange}
                 placeholder="Enter pincode"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">
+              <label className="block mb-2 text-sm text-slate-400">
                 Address
               </label>
               <input
@@ -220,25 +220,25 @@ const AddCompanyForm = () => {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Enter company address"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2"
               />
             </div>
           </div>
 
           {/* Logo */}
           <div>
-            <label className="block mb-2 text-sm text-gray-400">
+            <label className="block mb-2 text-sm text-slate-400">
               Company Logo
             </label>
 
-            <label className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 transition bg-gray-800">
+            <label className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-[#2a466f] rounded-xl cursor-pointer hover:border-sky-400 transition bg-[#0f2037]">
               {logo ? (
                 <div className="flex flex-col items-center text-green-400">
                   <Image size={28} />
                   <span className="text-sm mt-2">Logo Selected</span>
                 </div>
               ) : (
-                <div className="flex flex-col items-center text-gray-400">
+                <div className="flex flex-col items-center text-slate-400">
                   <Upload size={28} />
                   <span className="text-sm mt-2">
                     {id ? "Change Logo" : "Click to Upload Logo"}
@@ -266,14 +266,14 @@ const AddCompanyForm = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-6 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition"
+              className="px-6 py-2 rounded-lg bg-[#1f334f] hover:bg-[#29456b] transition"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition shadow-md"
+              className="px-6 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 transition shadow-md"
             >
               {id ? "Update Company" : "Add Company"}
             </button>
@@ -286,3 +286,5 @@ const AddCompanyForm = () => {
 };
 
 export default AddCompanyForm;
+
+

@@ -1,25 +1,14 @@
-
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 border-t border-gray-800 text-gray-400 py-4 px-6">
-      <div className="flex flex-col md:flex-row items-center justify-between text-sm">
+    <footer className="border-t border-[#1f365a] bg-[#081426]/90 px-6 py-4 text-slate-400 backdrop-blur-xl">
+      <div className="flex flex-col items-center justify-between gap-2 text-sm md:flex-row">
+        <p>© {new Date().getFullYear()} Medico. All rights reserved.</p>
 
-        <p>
-          Â© {new Date().getFullYear()} Medico. All rights reserved.
-        </p>
-
-        <div className="flex gap-4 mt-2 md:mt-0">
-          <span className="hover:text-white cursor-pointer transition">
-            Privacy
-          </span>
-          <span className="hover:text-white cursor-pointer transition">
-            Terms
-          </span>
-          <span className="hover:text-white cursor-pointer transition">
-            Support
-          </span>
+        <div className="flex gap-5">
+          <span className="cursor-pointer transition hover:text-sky-200">Privacy</span>
+          <span className="cursor-pointer transition hover:text-sky-200">Terms</span>
+          <span className="cursor-pointer transition hover:text-sky-200">Support</span>
         </div>
-
       </div>
     </footer>
   );

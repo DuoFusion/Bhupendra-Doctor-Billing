@@ -18,15 +18,15 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
     .slice(0, 3);
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800">
+    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
       
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-[#213a60] flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Bills</h2>
 
         <button
           onClick={() => navigate(ROUTES.BILL.GET_BILLS)}
-          className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition"
+          className="flex items-center gap-2 text-sm text-sky-300 hover:text-sky-200 transition"
         >
           View All
           <ArrowRight size={16} />
@@ -34,8 +34,8 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-gray-300 hidden sm:table">
-          <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
+        <table className="w-full text-sm text-left text-slate-200 hidden sm:table">
+          <thead className="bg-[#10223d] text-slate-300 uppercase text-[11px] tracking-[0.08em]">
             <tr>
               <th className="px-6 py-4">SR No</th>
               <th className="px-6 py-4">Status</th>
@@ -51,10 +51,10 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-[#1f3557]">
             {recentBills.length > 0 ? (
               recentBills.map((bill: any, index: number) => (
-                <tr key={bill._id} className="hover:bg-gray-800/60 transition">
+                <tr key={bill._id} className="hover:bg-[#122642]/70 transition">
                   <td className="px-6 py-4">{index + 1}</td>
 
                   <td className="px-6 py-4">
@@ -90,13 +90,13 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
                   <td className="px-6 py-4">{bill.items?.length}</td>
 
                   {isAdmin && (
-                    <td className="px-6 py-4 text-gray-400">
+                    <td className="px-6 py-4 text-slate-400">
                       {bill.user?.name || "-"} <br />
                       {bill.user?.email || ""}
                     </td>
                   )}
 
-                  <td className="px-6 py-4 font-semibold text-indigo-400">
+                  <td className="px-6 py-4 font-semibold text-sky-300">
                     ₹ {bill.subTotal}
                   </td>
 
@@ -109,7 +109,7 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
               <tr>
                 <td
                   colSpan={isAdmin ? 11 : 10}
-                  className="text-center py-6 text-gray-400"
+                  className="text-center py-6 text-slate-400"
                 >
                   No Recent Bills
                 </td>
@@ -123,25 +123,25 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
       <div className="sm:hidden p-4 space-y-4">
         {recentBills.length > 0 ? (
           recentBills.map((bill: any) => (
-            <div key={bill._id} className="bg-gray-900 border border-gray-800 rounded-xl p-4" >
+            <div key={bill._id} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4" >
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-white font-medium">{bill.billNumber}</h3>
-                  <p className="text-sm text-gray-400">{bill.items?.[0]?.productName || '-'}</p>
+                  <p className="text-sm text-slate-400">{bill.items?.[0]?.productName || '-'}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-green-400 font-semibold">₹{bill.grandTotal}</p>
-                  <p className="text-sm text-gray-400">{bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : ''}</p>
+                  <p className="text-sm text-slate-400">{bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : ''}</p>
                 </div>
               </div>
-              <div className="mt-3 text-sm text-gray-300">
+              <div className="mt-3 text-sm text-slate-200">
                 <p>Items: {bill.items?.length || 0}</p>
                 {isAdmin && <p>By: {bill.user?.name || '-'}</p>}
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-400">No Recent Bills</div>
+          <div className="text-center text-slate-400">No Recent Bills</div>
         )}
       </div>
     </div>
@@ -149,3 +149,6 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
 };
 
 export default BillRecentTable;
+
+
+

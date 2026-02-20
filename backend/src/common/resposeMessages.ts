@@ -11,6 +11,18 @@ export const responseMessage  = {
     
     signOut_SuccessFull : "Signout successfull",
     signOut_failed : "Signout failed",
+    changePassword_success: "Password changed successfully",
+    changePassword_failed: "Failed to change password",
+    oldPassword_incorrect: "Old password is incorrect",
+    password_confirm_mismatch: "New password and confirm password do not match",
+    forgotPassword_otp_sent: "OTP sent successfully to your email",
+    forgotPassword_otp_send_failed: "Failed to send OTP",
+    forgotPassword_otp_verified: "OTP verified successfully",
+    forgotPassword_otp_verify_failed: "Failed to verify OTP",
+    forgotPassword_otp_invalid: "Invalid OTP",
+    forgotPassword_otp_expired: "OTP has expired",
+    forgotPassword_reset_success: "Password reset successfully",
+    forgotPassword_reset_failed: "Failed to reset password",
 
     otp_sent : "OTP sent successfully.",
     otp_notSent : "Failed to send OTP.",

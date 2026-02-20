@@ -60,8 +60,8 @@ const ManageUsersTable = () => {
     );
 
 return (
-  <div className="bg-gray-900 rounded-xl border border-gray-800">
-    <div className="px-6 py-4 border-b border-gray-800">
+  <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
+    <div className="px-6 py-4 border-b border-[#213a60]">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-white">
           User Management
@@ -72,13 +72,13 @@ return (
             placeholder="Search by user name..."
             value={userSearch}
             onChange={(e) => setUserSearch(e.target.value)}
-            className="px-3 py-2 rounded-lg text-sm bg-gray-800 border border-gray-700 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
 
           <select
             value={userSortOrder}
             onChange={(e) => setUserSortOrder(e.target.value as any)}
-            className="px-3 py-2 rounded-lg text-sm bg-gray-800 border border-gray-700 text-gray-200"
+            className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100"
           >
             <option value="asc">Role: Admin → User</option>
             <option value="desc">Role: User → Admin</option>
@@ -86,7 +86,7 @@ return (
 
           <button
             onClick={() => navigate(ROUTES.ADMIN.ADD_USERS)}
-            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition shadow-md"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition "
           >
             <Plus size={16} />
             Add User
@@ -97,8 +97,8 @@ return (
 
     {/* ================= DESKTOP TABLE ================= */}
     <div className="overflow-x-auto">
-      <table className="min-w-[900px] w-full text-sm text-left text-gray-300 hidden sm:table">
-        <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
+      <table className="min-w-[900px] w-full text-sm text-left text-slate-200 hidden sm:table">
+        <thead className="bg-[#10223d] text-slate-300 uppercase text-[11px] tracking-[0.08em]">
           <tr>
             <th className="px-6 py-4">Name</th>
             <th className="px-6 py-4">Email</th>
@@ -107,12 +107,12 @@ return (
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-gray-800">
+        <tbody className="divide-y divide-[#1f3557]">
           {usersList?.length > 0 ? (
             usersList.map((user: any) => (
               <tr
                 key={user._id}
-                className="hover:bg-gray-800/60 transition"
+                className="hover:bg-[#122642]/70 transition"
               >
                 <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
                   {user.name}
@@ -126,7 +126,7 @@ return (
                   <span
                     className={`px-3 py-1 text-xs rounded-full ${
                       user.role === "admin"
-                        ? "bg-indigo-600/20 text-indigo-400"
+                        ? "bg-sky-600/20 text-sky-300"
                         : "bg-green-600/20 text-green-400"
                     }`}
                   >
@@ -157,7 +157,7 @@ return (
             ))
           ) : (
             <tr>
-              <td colSpan={4} className="text-center py-6 text-gray-400">
+              <td colSpan={4} className="text-center py-6 text-slate-400">
                 No Users Found
               </td>
             </tr>
@@ -172,14 +172,14 @@ return (
         usersList.map((user: any) => (
           <div
             key={user._id}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-4"
+            className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4"
           >
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-white font-medium">
                   {user.name}
                 </h3>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-slate-400">
                   {user.email}
                 </p>
               </div>
@@ -187,7 +187,7 @@ return (
               <span
                 className={`px-3 py-1 text-xs rounded-full ${
                   user.role === "admin"
-                    ? "bg-indigo-600/20 text-indigo-400"
+                    ? "bg-sky-600/20 text-sky-300"
                     : "bg-green-600/20 text-green-400"
                 }`}
               >
@@ -215,7 +215,7 @@ return (
           </div>
         ))
       ) : (
-        <div className="text-center text-gray-400">
+        <div className="text-center text-slate-400">
           No Users Found
         </div>
       )}
@@ -227,3 +227,6 @@ return (
 };
 
 export default ManageUsersTable;
+
+
+

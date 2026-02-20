@@ -18,12 +18,12 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
     .slice(0, 3);
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800">
-      <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
+      <div className="px-6 py-4 border-b border-[#213a60] flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Products</h2>
         <button
           onClick={() => navigate(ROUTES.PRODUCTS.GET_PRODUCTS)}
-          className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition"
+          className="flex items-center gap-2 text-sm text-sky-300 hover:text-sky-200 transition"
         >
           View All
           <ArrowRight size={16} />
@@ -31,8 +31,8 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
       </div>
 
       <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-300 hidden sm:table">
-          <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
+          <table className="w-full text-sm text-left text-slate-200 hidden sm:table">
+          <thead className="bg-[#10223d] text-slate-300 uppercase text-[11px] tracking-[0.08em]">
             <tr>
               <th className="px-6 py-4">Product</th>
               <th className="px-6 py-4">Company</th>
@@ -47,15 +47,15 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-[#1f3557]">
             {recentProducts.length > 0 ? (
               recentProducts.map((item: any) => (
-                <tr key={item._id} className="hover:bg-gray-800/60 transition">
+                <tr key={item._id} className="hover:bg-[#122642]/70 transition">
                   <td className="px-6 py-4 font-medium text-white">{item.productName}</td>
                   <td className="px-6 py-4">{item.company?.companyName}</td>
 
                   {isAdmin && (
-                    <td className="px-6 py-4 text-gray-400">
+                    <td className="px-6 py-4 text-slate-400">
                       {item.user?.name} <br />
                       {item.user?.email}
                     </td>
@@ -67,12 +67,12 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
                   <td className="px-6 py-4 text-green-400 font-medium">₹{item.sellingPrice}</td>
                   <td className="px-6 py-4">{item.gstPercent}%</td>
                   <td className="px-6 py-4">{item.stock}</td>
-                  <td className="px-6 py-4 text-gray-400">{item.expiry}</td>
+                  <td className="px-6 py-4 text-slate-400">{item.expiry}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={isAdmin ? 10 : 9} className="text-center py-6 text-gray-400">
+                <td colSpan={isAdmin ? 10 : 9} className="text-center py-6 text-slate-400">
                   No Recent Products
                 </td>
               </tr>
@@ -85,21 +85,21 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
         <div className="sm:hidden p-4 space-y-4">
           {recentProducts.length > 0 ? (
             recentProducts.map((product: any) => (
-              <div key={product._id} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+              <div key={product._id} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-white font-medium">{product.name}</h3>
-                    <p className="text-sm text-gray-400">{product.description || '-'}</p>
+                    <p className="text-sm text-slate-400">{product.description || '-'}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-green-400 font-semibold">{product.sku || ''}</p>
-                    <p className="text-sm text-gray-400">{product.createdAt ? new Date(product.createdAt).toLocaleDateString() : ''}</p>
+                    <p className="text-sm text-slate-400">{product.createdAt ? new Date(product.createdAt).toLocaleDateString() : ''}</p>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-400">No Recent Products</div>
+            <div className="text-center text-slate-400">No Recent Products</div>
           )}
         </div>
     </div>
@@ -107,3 +107,6 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
 };
 
 export default ProductRecentTable;
+
+
+

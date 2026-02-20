@@ -189,11 +189,11 @@ const GenerateBillForm = () => {
   if (isUserLoading || isCompaniesLoading || isProductsLoading || isBillLoading) return <p>Loading...</p>;
 
 return (
-  <div className="min-h-screen bg-gray-950 text-gray-200 p-4 sm:p-6">
-    <div className="max-w-6xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
+  <div className="min-h-screen bg-[#050d1c] text-slate-100 p-4 sm:p-6">
+    <div className="max-w-6xl mx-auto bg-[#0b172a]/95 border border-[#1e3354] rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
 
       <div className="mb-6">
-        <button type="button" onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-400 hover:text-white transition">
+        <button type="button" onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-400 hover:text-white transition">
           <ArrowLeft size={18} /> Back
         </button>
       </div>
@@ -203,8 +203,8 @@ return (
       <form className="space-y-10" onSubmit={handleSubmit}>
 
         <div>
-          <label className="block mb-2 text-sm text-gray-400">Select Company</label>
-          <select className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" value={selectedCompany} onChange={(e) => setSelectedCompany(e.target.value)}>
+          <label className="block mb-2 text-sm text-slate-400">Select Company</label>
+          <select className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" value={selectedCompany} onChange={(e) => setSelectedCompany(e.target.value)}>
             <option value="">Select Company</option>
             {companyOptions?.map((c: any) => (
               <option key={c._id} value={c._id}>{c.companyName}</option>
@@ -213,13 +213,13 @@ return (
           {formErrors.company && <p className="text-red-400 text-sm mt-2">{formErrors.company}</p>}
         </div>
 
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-[#1e3354] pt-8">
           <h3 className="text-lg font-semibold mb-6">Add Product Item</h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block mb-2 text-sm text-gray-400">Product</label>
-              <select className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} disabled={!selectedCompany}>
+              <label className="block mb-2 text-sm text-slate-400">Product</label>
+              <select className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} disabled={!selectedCompany}>
                 <option value="">Select Product</option>
                 {productsForCompany.map((p: any) => (
                   <option key={p._id} value={p._id}>{p.productName}</option>
@@ -229,33 +229,33 @@ return (
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">Qty</label>
-              <input type="number" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" value={qty} onChange={(e) => setQty(e.target.value === "" ? "" : Number(e.target.value))} disabled={!selectedCompany} />
+              <label className="block mb-2 text-sm text-slate-400">Qty</label>
+              <input type="number" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" value={qty} onChange={(e) => setQty(e.target.value === "" ? "" : Number(e.target.value))} disabled={!selectedCompany} />
               {itemErrors.qty && <p className="text-red-400 text-sm mt-2">{itemErrors.qty}</p>}
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">Free Qty (optional)</label>
-              <input type="number" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" value={freeQty} onChange={(e) => setFreeQty(e.target.value === "" ? "" : Number(e.target.value))} disabled={!selectedCompany} />
+              <label className="block mb-2 text-sm text-slate-400">Free Qty (optional)</label>
+              <input type="number" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" value={freeQty} onChange={(e) => setFreeQty(e.target.value === "" ? "" : Number(e.target.value))} disabled={!selectedCompany} />
             </div>
 
             <div>
-              <label className="block mb-2 text-sm text-gray-400">Item Discount (optional)</label>
-              <input type="number" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" value={itemDiscount} onChange={(e) => setItemDiscount(e.target.value === "" ? "" : Number(e.target.value))} disabled={!selectedCompany} />
+              <label className="block mb-2 text-sm text-slate-400">Item Discount (optional)</label>
+              <input type="number" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" value={itemDiscount} onChange={(e) => setItemDiscount(e.target.value === "" ? "" : Number(e.target.value))} disabled={!selectedCompany} />
             </div>
           </div>
 
           <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <button type="button" className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition w-full sm:w-auto" onClick={addItemToList} disabled={!selectedCompany}>Add Item</button>
-            <div className="text-sm text-gray-400 text-right">{items.length} item(s) added</div>
+            <button type="button" className="px-6 py-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 rounded-lg transition w-full sm:w-auto" onClick={addItemToList} disabled={!selectedCompany}>Add Item</button>
+            <div className="text-sm text-slate-400 text-right">{items.length} item(s) added</div>
           </div>
 
           {formErrors.items && <p className="text-red-400 text-sm mt-2">{formErrors.items}</p>}
 
           {items.length > 0 && (
-            <div className="mt-6 bg-gray-900 border border-gray-800 rounded-lg p-4 overflow-x-auto">
-              <table className="min-w-full text-sm text-left text-gray-300">
-                <thead className="text-gray-400 text-xs">
+            <div className="mt-6 bg-[#0b172a]/95 border border-[#1e3354] rounded-lg p-4 overflow-x-auto">
+              <table className="min-w-full text-sm text-left text-slate-200">
+                <thead className="text-slate-400 text-xs">
                   <tr>
                     <th className="px-3 py-2">Product</th>
                     <th className="px-3 py-2">Qty</th>
@@ -267,7 +267,7 @@ return (
                 </thead>
                 <tbody className="divide-y divide-gray-800">
                   {items.map((it, idx) => (
-                    <tr key={idx} className="hover:bg-gray-800/40 transition">
+                    <tr key={idx} className="hover:bg-[#0f2037]/40 transition">
                       <td className="px-3 py-2">{it.productName}</td>
                       <td className="px-3 py-2">{it.qty}</td>
                       <td className="px-3 py-2">{it.freeQty}</td>
@@ -284,26 +284,26 @@ return (
           )}
 
           {/* Summary */}
-          <div className="mt-6 bg-gray-900 border border-gray-800 rounded-lg p-4">
-            <h4 className="text-sm text-gray-400 mb-3">Summary</h4>
+          <div className="mt-6 bg-[#0b172a]/95 border border-[#1e3354] rounded-lg p-4">
+            <h4 className="text-sm text-slate-400 mb-3">Summary</h4>
             <div className="flex justify-between text-sm"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
             <div className="flex justify-between text-sm mt-2"><span>GST</span><span>₹{gstTotal.toFixed(2)}</span></div>
             <div className="flex justify-between text-sm mt-2"><span>Bill Discount</span><span>- ₹{(Number(billDiscount) || 0).toFixed(2)}</span></div>
-            <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-800">
-              <span className="text-sm text-gray-400">Grand Total</span>
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-[#1e3354]">
+              <span className="text-sm text-slate-400">Grand Total</span>
               <span className="text-lg font-semibold text-white">₹{grandTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="border-t border-[#1e3354] pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
 
           <div>
-            <label className="block mb-3 text-sm text-gray-400">Payment Method</label>
+            <label className="block mb-3 text-sm text-slate-400">Payment Method</label>
             <div className="flex flex-wrap gap-6">
               {["Cash", "UPI", "Card", "Net Banking"].map((method) => (
                 <label key={method} className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="paymentMethod" value={method} className="accent-indigo-500" checked={paymentMethod === method} onChange={() => setPaymentMethod(method)} />
+                  <input type="radio" name="paymentMethod" value={method} className="accent-sky-500" checked={paymentMethod === method} onChange={() => setPaymentMethod(method)} />
                   <span>{method}</span>
                 </label>
               ))}
@@ -312,11 +312,11 @@ return (
           </div>
 
           <div>
-            <label className="block mb-3 text-sm text-gray-400">Bill Status</label>
+            <label className="block mb-3 text-sm text-slate-400">Bill Status</label>
             <div className="flex flex-wrap gap-6">
               {["Paid", "Unpaid", "Cancelled"].map((s) => (
                 <label key={s} className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="billStatus" value={s} className="accent-indigo-500" checked={billStatus === s} onChange={() => setBillStatus(s)} />
+                  <input type="radio" name="billStatus" value={s} className="accent-sky-500" checked={billStatus === s} onChange={() => setBillStatus(s)} />
                   <span>{s}</span>
                 </label>
               ))}
@@ -326,16 +326,16 @@ return (
 
         </div>
 
-        <div className="border-t border-gray-800 pt-8">
-          <label className="block mb-2 text-sm text-gray-400">Bill Discount (optional)</label>
-          <input type="number" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2" value={billDiscount} onChange={(e) => setBillDiscount(e.target.value === "" ? "" : Number(e.target.value))} />
+        <div className="border-t border-[#1e3354] pt-8">
+          <label className="block mb-2 text-sm text-slate-400">Bill Discount (optional)</label>
+          <input type="number" className="w-full bg-[#0f2037] border border-[#2a466f] rounded-lg px-4 py-2" value={billDiscount} onChange={(e) => setBillDiscount(e.target.value === "" ? "" : Number(e.target.value))} />
         </div>
 
         {mutation.isError && <p className="text-red-400 text-sm text-center">{getErrorMessage()}</p>}
 
         <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8">
-          <button type="button" onClick={() => navigate(-1)} className="px-6 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition w-full sm:w-auto">Cancel</button>
-          <button type="submit" className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition shadow-md w-full sm:w-auto">Generate Bill</button>
+          <button type="button" onClick={() => navigate(-1)} className="px-6 py-2 rounded-lg bg-[#1f334f] hover:bg-[#29456b] transition w-full sm:w-auto">Cancel</button>
+          <button type="submit" className="px-6 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 transition shadow-md w-full sm:w-auto">Generate Bill</button>
         </div>
 
       </form>
@@ -346,3 +346,5 @@ return (
 };
 
 export default GenerateBillForm;
+
+

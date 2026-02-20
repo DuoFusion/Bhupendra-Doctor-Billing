@@ -89,8 +89,8 @@ const BillTable = () => {
     );
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800">
-      <div className="px-6 py-4 border-b border-gray-800">
+    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
+      <div className="px-6 py-4 border-b border-[#213a60]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white">Bill List</h2>
 
@@ -102,14 +102,14 @@ const BillTable = () => {
               placeholder="Search by bill number, product, company or user..."
               value={billSearch}
               onChange={(e) => setBillSearch(e.target.value)}
-              className="px-3 py-2 rounded-lg text-sm bg-gray-800 border border-gray-700 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-[260px]"
+              className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 w-full sm:w-[260px]"
             />
 
             <select
               aria-label="Sort bills by"
               value={billSortBy}
               onChange={(e) => setBillSortBy(e.target.value as any)}
-              className="px-3 py-2 rounded-lg text-sm bg-gray-800 border border-gray-700 text-gray-200"
+              className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100"
             >
               <option value="">No sort</option>
               <option value="status">Status (Paid / Unpaid)</option>
@@ -120,29 +120,29 @@ const BillTable = () => {
               aria-pressed={billSortOrder === "desc"}
               title="Toggle sort order"
               onClick={() => setBillSortOrder((s) => (s === "asc" ? "desc" : "asc"))}
-              className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-200"
+              className="px-3 py-2 rounded-lg bg-[#0f2037] border border-[#2a466f] text-slate-100"
             >
               {billSortOrder === "asc" ? "↑" : "↓"}
             </button>
 
             <button
               onClick={() => navigate(ROUTES.BILL.GENERATE_BILL)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition"
+              className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition"
             >
               <Plus size={16} />
               Generate Bill
             </button>
 
             {billSortBy && (
-              <span className="ml-2 text-sm text-gray-300">Sorted by: <strong className="text-white">{billSortBy === 'status' ? 'Status' : 'Grand Total'} ({billSortOrder})</strong></span>
+              <span className="ml-2 text-sm text-slate-200">Sorted by: <strong className="text-white">{billSortBy === 'status' ? 'Status' : 'Grand Total'} ({billSortOrder})</strong></span>
             )}
           </div>
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[1800px] w-full text-sm text-left text-gray-300 hidden sm:table">
-          <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
+        <table className="min-w-[1800px] w-full text-sm text-left text-slate-200 hidden sm:table">
+          <thead className="bg-[#10223d] text-slate-300 uppercase text-[11px] tracking-[0.08em]">
             <tr>
               <th className="px-6 py-4">SR No</th>
               <th className="px-6 py-4">Status</th>
@@ -160,10 +160,10 @@ const BillTable = () => {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-[#1f3557]">
             {billsList?.length > 0 ? (
               billsList.map((bill: any, index: number) => (
-                <tr key={bill._id} className="hover:bg-gray-800/60 transition">
+                <tr key={bill._id} className="hover:bg-[#122642]/70 transition">
                   
                   <td className="px-6 py-4">{index + 1}</td>
 
@@ -206,13 +206,13 @@ const BillTable = () => {
                   </td>
 
                   {isAdmin && (
-                    <td className="px-6 py-4 text-gray-400">
+                    <td className="px-6 py-4 text-slate-400">
                       {bill.user?.name || "-"} <br />
                       {bill.user?.email || ""}
                     </td>
                   )}
 
-                  <td className="px-6 py-4 font-semibold text-indigo-400">
+                  <td className="px-6 py-4 font-semibold text-sky-300">
                     ₹ {bill.subTotal}
                   </td>
 
@@ -232,7 +232,7 @@ const BillTable = () => {
                         onClick={() =>
                           navigate(ROUTES.BILL.UPDATE_BILL.replace(":id", bill._id))
                         }
-                        className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition"
+                        className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"
                       >
                         <Pencil size={16} />
                       </button>
@@ -251,7 +251,7 @@ const BillTable = () => {
               <tr>
                 <td
                   colSpan={isAdmin ? 13 : 12}
-                  className="text-center py-6 text-gray-400"
+                  className="text-center py-6 text-slate-400"
                 >
                   No Bills Found
                 </td>
@@ -265,18 +265,18 @@ const BillTable = () => {
       <div className="sm:hidden p-4 space-y-4">
         {billsList?.length > 0 ? (
           billsList.map((bill: any) => (
-            <div key={bill._id} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+            <div key={bill._id} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-white font-medium">{bill.billNumber}</h3>
-                  <p className="text-sm text-gray-400">{bill.user?.name || '-'}</p>
+                  <p className="text-sm text-slate-400">{bill.user?.name || '-'}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-green-400 font-semibold">₹{bill.grandTotal}</p>
-                  <p className="text-sm text-gray-400">{bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : ''}</p>
+                  <p className="text-sm text-slate-400">{bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : ''}</p>
                 </div>
               </div>
-              <div className="mt-3 text-sm text-gray-300">
+              <div className="mt-3 text-sm text-slate-200">
                 <p>Items: {bill.items?.length || 0}</p>
                 <p>Products: {bill.items?.map((it:any) => it.productName).slice(0,3).join(', ')}</p>
               </div>
@@ -284,7 +284,7 @@ const BillTable = () => {
                 <button onClick={() => navigate(ROUTES.BILL.VIEW_INVOICE.replace(':id', bill._id))} className="p-2 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600 hover:text-white transition">
                   <View size={16} />
                 </button>
-                <button onClick={() => navigate(ROUTES.BILL.UPDATE_BILL.replace(':id', bill._id))} className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition">
+                <button onClick={() => navigate(ROUTES.BILL.UPDATE_BILL.replace(':id', bill._id))} className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition">
                   <Pencil size={16} />
                 </button>
                 <button onClick={() => mutate(bill._id)} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition">
@@ -294,7 +294,7 @@ const BillTable = () => {
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-400">No Bills Found</div>
+          <div className="text-center text-slate-400">No Bills Found</div>
         )}
       </div>
     </div>
@@ -302,3 +302,6 @@ const BillTable = () => {
 };
 
 export default BillTable;
+
+
+

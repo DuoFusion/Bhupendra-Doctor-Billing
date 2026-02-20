@@ -27,12 +27,13 @@
     }
 
     /*============ OTP Sender ===========*/
-    export const otpSender = async (email : string)=>{
-        const otp = generateOTP()
-        const expireAt = new Date(Date.now() + (1000 * 60 * 3)) // otp valid for 3min
+export const otpSender = async (email : string)=>{
+    const otp = generateOTP()
+    const expireAt = new Date(Date.now() + (1000 * 60 * 3)) // otp valid for 3min
 
-        try {
-        await OTP_Collection.create({email,otp,expireAt,} as any);
+    try {
+        await OTP_Collection.deleteMany({ email, purpose: "signin" } as any);
+        await OTP_Collection.create({email,otp,expireAt,purpose: "signin"} as any);
         await transporter.sendMail({
                 from: `Security Team <${process.env.EMAIL}>`, 
                 to: email,

@@ -6,6 +6,11 @@ const authSchema = new mongoose.Schema({
     email : {type : String , },
     password : {type : String , },
     role : {type : String , enum : Object.values(ROLES) , default : ROLES.user},
+    phone : {type : String , default : ""},
+    address : {type : String , default : ""},
+    city : {type : String , default : ""},
+    state : {type : String , default : ""},
+    pincode : {type : String , default : ""},
     isDelete : {type : Boolean , default : false}
 } , {timestamps : true  , versionKey : false})
 

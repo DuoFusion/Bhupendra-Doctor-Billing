@@ -53,7 +53,7 @@ const OtpVerifyForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
-      <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-lg">
+      <div className="w-full max-w-md bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-8 shadow-lg">
         <h2 className="text-2xl font-semibold text-center mb-6">Verify OTP</h2>
 
         <div className="space-y-4">
@@ -62,13 +62,13 @@ const OtpVerifyForm = () => {
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full px-4 py-3 bg-[#0f2037] rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
           />
 
           <button
             onClick={handleVerify}
             disabled={mutation.isPending}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded-md font-medium transition"
+            className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 py-3 rounded-md font-medium transition"
           >
             {mutation.isPending ? "Verifying..." : "Verify OTP"}
           </button>
@@ -85,3 +85,4 @@ const OtpVerifyForm = () => {
 };
 
 export default OtpVerifyForm;
+

@@ -4,7 +4,12 @@ export const URL_KEYS = {
     SIGNIN: "/signin",
     SIGNOUT : "/signout",
     OTP_VERIFICATION: "/otp/verify",
+    FORGOT_PASSWORD_SEND_OTP: "/forgot-password/send-otp",
+    FORGOT_PASSWORD_VERIFY_OTP: "/forgot-password/verify-otp",
+    FORGOT_PASSWORD_RESET: "/forgot-password/reset-password",
     GET_CURRENT_USER: "/me",
+    UPDATE_PROFILE: "/profile/update",
+    CHANGE_PASSWORD: "/password/change",
   },
 
   PRODUCT: {
