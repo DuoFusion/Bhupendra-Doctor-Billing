@@ -1,4 +1,4 @@
-import GenerateBillForm from "../../components/common/GenerateBillForm"
+import GenerateBillForm from "../../components/common/bill/GenerateBillForm"
 
 const GenerateBill = () => {
   return (

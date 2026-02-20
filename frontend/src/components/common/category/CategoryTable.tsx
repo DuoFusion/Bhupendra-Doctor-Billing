@@ -1,0 +1,137 @@
+import { useMemo, useState } from "react";
+import { Pencil, Trash2, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getCategories, deleteCategory } from "../../../api/categoryApi";
+import { getCurrentUser } from "../../../api/authApi";
+import AddCategoryForm from "./AddCategoryForm";
+import { ROUTES } from "../../../constants/Routes";
+
+const CategoryTable = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, error } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
+  const { data: currentUser } = useQuery({ queryKey: ["currentUser"], queryFn: getCurrentUser });
+
+  const isAdmin = currentUser?.user?.role === "admin";
+
+  const [search, setSearch] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editItem, setEditItem] = useState<{ name: string; userId?: string } | null>(null);
+
+  const categoriesList = useMemo(() => {
+    const payload = data?.data;
+    if (!payload) return [] as any[];
+
+    if (isAdmin) {
+      const rows: any[] = [];
+      (payload as any[]).forEach((doc: any) => {
+        (doc.categories || []).forEach((c: string) => rows.push({ name: c, user: doc.user }));
+      });
+      return rows.filter((r) => r.name.toString().toLowerCase().includes(search.toLowerCase()));
+    }
+
+    const arr = (payload?.categories) || [];
+    return arr.filter((n: string) => n.toString().toLowerCase().includes(search.toLowerCase())).map((n: string) => ({ name: n }));
+  }, [data, isAdmin, search]);
+
+  const { mutate } = useMutation({ mutationFn: (payload :  { name: string }) => deleteCategory(payload), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }) });
+
+  if (isLoading) return <p className="p-6 text-center">Loading...</p>;
+  if (isError) return <p className="p-6 text-center text-red-400">{(error as any)?.response?.data?.message || "Something went wrong"}</p>;
+
+  return (
+    <div className="bg-gray-900 rounded-xl border border-gray-800">
+      <div className="px-6 py-4 border-b border-gray-800">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-white">Category List</h2>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 ps-2">
+            <input
+              placeholder="Search by category..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="px-3 py-2 rounded-lg text-sm bg-gray-800 border border-gray-700 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+
+            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition shadow-md" onClick={() => setShowAdd(true)}>
+              <Plus size={16} />
+              Add Category
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-[800px] w-full text-sm text-left text-gray-300 hidden sm:table">
+          <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
+            <tr>
+              <th className="px-6 py-4">Category</th>
+              {isAdmin && <th className="px-6 py-4">Added By</th>}
+              <th className="px-6 py-4 text-center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody className="divide-y divide-gray-800">
+            {categoriesList?.length > 0 ? (
+              categoriesList.map((item: any, idx: number) => (
+                <tr key={idx} className="hover:bg-gray-800/60 transition">
+                  <td className="px-6 py-4">{item.name}</td>
+                  {isAdmin && <td className="px-6 py-4 text-gray-400 whitespace-nowrap">Name : {item.user?.name} <br /> {item.user?.email}</td>}
+                  <td className="px-6 py-4">
+                    <div className="flex justify-center gap-3">
+                      <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition"><Pencil size={16} /></button>
+                      <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={isAdmin ? 3 : 2} className="text-center py-6 text-gray-400">No Categories Found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="sm:hidden p-4 space-y-4">
+        {categoriesList?.length > 0 ? (
+          categoriesList.map((item: any, idx: number) => (
+            <div key={idx} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-white font-medium">{item.name}</h3>
+                  {isAdmin && <p className="text-sm text-gray-400">Added By: {item.user?.name}</p>}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition"><Pencil size={16} /></button>
+                  <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-400">No Categories Found</div>
+        )}
+      </div>
+
+      {showAdd && (
+        <div className="p-6">
+          <AddCategoryForm onClose={() => setShowAdd(false)} />
+        </div>
+      )}
+
+      {showEdit && editItem && (
+        <div className="p-6">
+          <AddCategoryForm initialName={editItem.name} userId={editItem.userId} onClose={() => { setShowEdit(false); setEditItem(null); }} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CategoryTable;

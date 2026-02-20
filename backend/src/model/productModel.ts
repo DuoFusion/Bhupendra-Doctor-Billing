@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import { CATEGORY, modelName, STOCK_STATUS } from "../common";
+import { modelName, STOCK_STATUS } from "../common";
 
 const productSchema = new mongoose.Schema(
   {
     productName: { type: String,  trim: true },
     company: {type: mongoose.Schema.Types.ObjectId,ref: modelName.companyModelName,},
     user : {type : mongoose.Schema.Types.ObjectId , ref : modelName.authModelName , required : true},
-    category: {type: String, enum: Object.values(CATEGORY),},
+    category: {type: String},
     hsnCode: { type: String,  },
     mrp: { type: Number,  },
     purchasePrice: { type: Number,  },

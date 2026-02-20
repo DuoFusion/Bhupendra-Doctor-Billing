@@ -3,8 +3,8 @@ import { ArrowLeft, Upload, Image } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { addCompany, updateCompany, getCompanyById } from "../../api/companyApi";
-import { ROUTES } from "../../constants/Routes";
+import { addCompany, updateCompany, getCompanyById } from "../../../api/companyApi";
+import { ROUTES } from "../../../constants/Routes";
 
 interface CompanyFormData {
   companyName: string;

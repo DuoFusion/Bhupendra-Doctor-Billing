@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants/Routes";
-import { URL_KEYS } from "../../constants/Url";
+import { ROUTES } from "../../../constants/Routes";
+import { URL_KEYS } from "../../../constants/Url";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCompany, getAllCompanies } from "../../api/companyApi";
-import { getCurrentUser } from "../../api/authApi";
+import { deleteCompany, getAllCompanies } from "../../../api/companyApi";
+import { getCurrentUser } from "../../../api/authApi";
 
 const CompanyTable = () => {
   const navigate = useNavigate();
@@ -77,7 +77,6 @@ const CompanyTable = () => {
         </div>
       </div>
 
-      {/* ================= DESKTOP TABLE ================= */}
       <div className="overflow-x-auto">
         <table className="min-w-[1200px] w-full text-sm text-left text-gray-300 hidden sm:table">
           <thead className="bg-gray-800 text-gray-400 uppercase text-xs">
@@ -165,7 +164,6 @@ const CompanyTable = () => {
         </table>
       </div>
 
-      {/* ================= MOBILE CARD VIEW ================= */}
       <div className="sm:hidden p-4 space-y-4">
         {companiesList?.length > 0 ? (
           companiesList.map((company: any) => (

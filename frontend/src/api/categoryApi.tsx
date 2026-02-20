@@ -1,0 +1,27 @@
+import axios from "axios";
+import { URL_KEYS } from "../constants/Url";
+
+const API = axios.create({
+  baseURL: "http://localhost:7000",
+  withCredentials: true,
+});
+
+export const getCategories = async () => {
+  const response = await API.get(URL_KEYS.CATEGORY.GET_CATEGORIES);
+  return response.data;
+};
+
+export const addCategory = async (data: { name: string }) => {
+  const response = await API.post(URL_KEYS.CATEGORY.ADD_CATEGORY, data);
+  return response.data;
+};
+
+export const updateCategory = async (data: { oldName: string; newName: string; userId?: string }) => {
+  const response = await API.put(URL_KEYS.CATEGORY.UPDATE_CATEGORY, data);
+  return response.data;
+};
+
+export const deleteCategory = async (data: { name: string; userId?: string }) => {
+  const response = await API.delete(URL_KEYS.CATEGORY.DELETE_CATEGORY, { data });
+  return response.data;
+};

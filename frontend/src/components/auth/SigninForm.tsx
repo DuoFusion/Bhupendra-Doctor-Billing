@@ -55,6 +55,12 @@ const SigninForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
           />
+          <span
+            className="text-indigo-400 cursor-pointer ml-1 flex justify-end"
+            onClick={() => navigate(ROUTES.AUTH.FORGET_PASSWORD)}
+          >
+            Forget Password ?
+          </span>
 
           <button
             onClick={handleSignin}

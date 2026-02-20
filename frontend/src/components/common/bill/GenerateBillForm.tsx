@@ -3,11 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { getAllCompanies } from "../../api/companyApi";
-import { getAllProducts } from "../../api/productApi";
-import { getCurrentUser } from "../../api/authApi";
-import { addBill, getBillById, updateBill } from "../../api/billApi";
-import { ROUTES } from "../../constants/Routes";
+import { getAllCompanies } from "../../../api/companyApi";
+import { getAllProducts } from "../../../api/productApi";
+import { getCurrentUser } from "../../../api/authApi";
+import { addBill, getBillById, updateBill } from "../../../api/billApi";
+import { ROUTES } from "../../../constants/Routes";
 
 const GenerateBillForm = () => {
   const navigate = useNavigate();

@@ -17,6 +17,7 @@ export const responseMessage  = {
     otp_invalid : "Invalid OTP entered.",
     otp_verifyAndSignin : "OTP verified successfully. Sign-in completed.",
     
+
     userNotFound : "User not found. Please register first.",
     incorrectPassword : "Incorrect password.",
     input_error : "All fields are required.",
@@ -53,6 +54,18 @@ export const responseMessage  = {
 
     productDeleted_success: "Product deleted successfully!",
     productDeleted_failed: "Failed to delete product!",
+
+    allCategoriesGet_success: "All categories fetched successfully",
+    allCategoriesGet_failed: "Failed to fetch categories",
+
+    categoryAdded_success: "Category added successfully",
+    categoryAdded_failed: "Failed to add category",
+
+    categoryUpdate_success: "Category updated successfully",
+    categoryUpdate_failed: "Failed to update category",
+
+    categoryDeleted_success: "Category deleted successfully",
+    categoryDeleted_failed: "Failed to delete category",
 
     allBillsGet_success: "All bills fetched successfully",
     allBillsGet_failed: "Failed to fetch bills",

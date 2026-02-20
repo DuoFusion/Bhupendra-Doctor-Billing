@@ -1,4 +1,4 @@
-import AddCompanyForm from "../../components/common/AddCompanyForm"
+import AddCompanyForm from "../../components/common/company/AddCompanyForm"
 
 const AddCompany = () => {
   return (

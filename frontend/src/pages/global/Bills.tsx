@@ -1,4 +1,4 @@
-import BillTable from "../../components/common/BillTable";
+import BillTable from "../../components/common/bill/BillTable";
 
 const Bills = () => {
 

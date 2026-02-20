@@ -1,4 +1,4 @@
-import AddProductForm from '../../components/common/AddProductForm'
+import AddProductForm from '../../components/common/product/AddProductForm'
 
 const AddProduct = () => {
   return (

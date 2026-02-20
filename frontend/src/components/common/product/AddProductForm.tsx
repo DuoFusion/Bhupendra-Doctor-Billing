@@ -2,10 +2,11 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ROUTES } from "../../constants/Routes";
+import { ROUTES } from "../../../constants/Routes";
 import axios from "axios";
-import { getAllCompanies } from "../../api/companyApi";
-import { addProduct, updateProduct, getProductById } from "../../api/productApi";
+import { getAllCompanies } from "../../../api/companyApi";
+import { addProduct, updateProduct, getProductById } from "../../../api/productApi";
+import CategorySelector from "../category/CategorySelector";
 
 const AddProductForm = () => {
   const navigate = useNavigate();
@@ -128,25 +129,7 @@ const AddProductForm = () => {
 
           <div>
             <label className="block mb-2 text-sm text-gray-400">Category</label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
-              required
-            >
-              <option value="">Select Category</option>
-              <option value="Tablets">Tablets</option>
-              <option value="Capsules">Capsules</option>
-              <option value="Syrups">Syrups</option>
-              <option value="Injections">Injections</option>
-              <option value="Ointments">Ointments</option>
-              <option value="Creams">Creams</option>
-              <option value="Drops">Drops</option>
-              <option value="Powders">Powders</option>
-              <option value="Medical Devices">Medical Devices</option>
-              <option value="Surgical Items">Surgical Items</option>
-            </select>
+            <CategorySelector value={formData.category} onChange={(v: string) => setFormData((p) => ({ ...p, category: v }))} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

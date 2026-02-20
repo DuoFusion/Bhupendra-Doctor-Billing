@@ -40,9 +40,15 @@ export const URL_KEYS = {
 
   },
 
+  CATEGORY: {
+    GET_CATEGORIES: "/get/categories",
+    ADD_CATEGORY: "/add/category",
+    UPDATE_CATEGORY: "/update/category",
+    DELETE_CATEGORY: "/delete/category",
+  },
+
   UPLOAD: {
     GET_IMAGE: "/upload",
   },
 };
 
-//

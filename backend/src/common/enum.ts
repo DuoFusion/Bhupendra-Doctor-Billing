@@ -3,18 +3,6 @@ export const ROLES = {
     user : "user",
 }
 
-export const CATEGORY = {
-  tablets: "Tablets",
-  capsules: "Capsules",
-  syrups: "Syrups",
-  injections: "Injections",
-  ointments: "Ointments",
-  creams: "Creams",
-  drops: "Drops",
-  powders: "Powders",
-  medicalDevices: "Medical Devices",
-  surgicalItems: "Surgical Items"
-};
 
 export const BILL_STATUS = {
   paid: "Paid",

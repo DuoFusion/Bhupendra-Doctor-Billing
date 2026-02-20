@@ -1,10 +1,10 @@
 import  { useMemo, useState } from "react";
 import { Pencil, Trash2, Plus, View } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants/Routes";
+import { ROUTES } from "../../../constants/Routes";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllBills, deleteBill } from "../../api/billApi";
-import { getCurrentUser } from "../../api/authApi";
+import { getAllBills, deleteBill } from "../../../api/billApi";
+import { getCurrentUser } from "../../../api/authApi";
 
 const BillTable = () => {
   const navigate = useNavigate();

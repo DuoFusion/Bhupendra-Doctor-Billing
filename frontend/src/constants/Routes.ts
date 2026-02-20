@@ -3,6 +3,9 @@ export const ROUTES = {
     SIGNUP: "/",
     SIGNIN: "/auth/signin",
     VERIFY_OTP: "/auth/verify-otp",
+    FORGET_PASSWORD: "/resetForgetPassword" ,
+    OTP_VERIFY_RESET_PASSWORD : "/verifyOTP/resetPassword",
+    CHANGE_PASSWORD: "/changePassword"
   },
 
   ADMIN: {
@@ -35,6 +38,11 @@ export const ROUTES = {
     GENERATE_BILL : "/generate-bill",
     UPDATE_BILL: "/update-bill/:id" ,
     VIEW_INVOICE : "/invoice-bill/:id"
+  },
+
+  CATEGORY: {
+    GET_CATEGORIES: "/categories",
+    ADD_CATEGORY: "/add-category",
   },
 
   NOT_FOUND: "*",

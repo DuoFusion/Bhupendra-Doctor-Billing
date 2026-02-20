@@ -1,4 +1,4 @@
-import ProductTable from "../../components/common/ProductTable";
+import ProductTable from "../../components/common/product/ProductTable";
 
 const Product = () => {
 

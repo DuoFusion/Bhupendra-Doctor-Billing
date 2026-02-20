@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
-import { deleteProduct, getAllProducts } from "../../api/productApi";
+import { deleteProduct, getAllProducts } from "../../../api/productApi";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants/Routes";
-import { getCurrentUser } from "../../api/authApi";
+import { ROUTES } from "../../../constants/Routes";
+import { getCurrentUser } from "../../../api/authApi";
 
 const ProductTable = () => {
 

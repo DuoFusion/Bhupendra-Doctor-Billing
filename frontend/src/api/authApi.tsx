@@ -48,3 +48,4 @@ export const signout = async () => {
   const response = await API.post(URL_KEYS.AUTH.SIGNOUT, {}, { withCredentials: true });
   return response.data;
 };
+

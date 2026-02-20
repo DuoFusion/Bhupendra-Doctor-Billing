@@ -36,14 +36,16 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
     { id: 2, text: "Products", path: ROUTES.PRODUCTS.GET_PRODUCTS, icon: <Package size={18} /> },
     { id: 3, text: "Company", path: ROUTES.COMPANY.GET_COMPANY, icon: <Building2 size={18} /> },
     { id: 4, text: "Bills", path: ROUTES.BILL.GET_BILLS, icon: <FileText size={18} /> },
-    { id: 5, text: "Users", path: ROUTES.ADMIN.MANAGE_USERS, icon: <UserPlus size={18} /> }
+    { id: 5, text: "Category", path: ROUTES.CATEGORY.GET_CATEGORIES, icon: <FileText size={18} /> },
+    { id: 6, text: "Users", path: ROUTES.ADMIN.MANAGE_USERS, icon: <UserPlus size={18} /> }
   ];
 
   const userMenu = [
     { id: 6, text: "Dashboard", path: ROUTES.USER.DASHBOARD, icon: <LayoutDashboard size={18} /> },
     { id: 7, text: "Products", path: ROUTES.PRODUCTS.GET_PRODUCTS, icon: <Package size={18} /> },
     { id: 8, text: "Company", path: ROUTES.COMPANY.GET_COMPANY, icon: <Building2 size={18} /> },
-    { id: 9, text: "Bills", path: ROUTES.BILL.GET_BILLS, icon: <FileText size={18} /> }
+    { id: 9, text: "Bills", path: ROUTES.BILL.GET_BILLS, icon: <FileText size={18} /> },
+    { id: 10, text: "Category", path: ROUTES.CATEGORY.GET_CATEGORIES, icon: <FileText size={18} /> }
   ];
 
   const guestMenu = [

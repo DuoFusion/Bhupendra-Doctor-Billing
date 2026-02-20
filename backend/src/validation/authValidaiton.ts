@@ -11,3 +11,4 @@ export const signInValidation = Joi.object({
     email : Joi.string().email().required().trim(),
     password : Joi.string().min(5).required().trim()
 })
+

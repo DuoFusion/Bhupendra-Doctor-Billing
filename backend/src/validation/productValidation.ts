@@ -1,11 +1,11 @@
 import Joi from "joi";
-import { CATEGORY, STOCK_STATUS } from "../common/enum";
+import { STOCK_STATUS } from "../common/enum";
 
 // ================= Add Product Validation =================
 export const productDataValidation = Joi.object({
   productName: Joi.string().trim().min(2).max(100).required(),
   company: Joi.string().trim().length(24).required(),
-  category: Joi.string().valid(...Object.values(CATEGORY)).required(),
+  category: Joi.string().trim().required(),
   hsnCode: Joi.string().trim().min(4).max(10).required(),
   mrp: Joi.number().min(1).max(100000).required(),
   purchasePrice: Joi.number().min(0).max(100000).required(),
@@ -24,7 +24,7 @@ export const productDataValidation = Joi.object({
 export const productUpdateDataValidation = Joi.object({
   productName: Joi.string().trim().min(2).max(100),
   company: Joi.string().trim().length(24),
-  category: Joi.string().valid(...Object.values(CATEGORY)),
+  category: Joi.string().trim(),
   hsnCode: Joi.string().trim().min(4).max(10),
   mrp: Joi.number().min(1).max(100000),
   purchasePrice: Joi.number().min(0).max(100000),

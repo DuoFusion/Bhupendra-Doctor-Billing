@@ -4,6 +4,8 @@ export const routes = [
   { path: ROUTES.AUTH.SIGNUP, title: "Sign Up" },
   { path: ROUTES.AUTH.SIGNIN, title: "Sign In" },
   { path: ROUTES.AUTH.VERIFY_OTP, title: "OTP Verification" },
+  { path: ROUTES.AUTH.FORGET_PASSWORD, title: "Forget Password" },
+  { path: ROUTES.AUTH.OTP_VERIFY_RESET_PASSWORD, title: "Reset Password" },
 
   { path: ROUTES.USER.DASHBOARD, title: "Dashboard" },
   { path: ROUTES.USER.PROFILE, title: "Profile" },
@@ -23,4 +25,7 @@ export const routes = [
   { path: ROUTES.BILL.GET_BILLS, title: "Bill Management" },
   { path: ROUTES.BILL.GENERATE_BILL, title: "Generate Bill" },
   {path : ROUTES.BILL.VIEW_INVOICE , title : "Invoice Bill"}
+  ,
+  { path: ROUTES.CATEGORY.GET_CATEGORIES, title: "Category Management" },
+  { path: ROUTES.CATEGORY.ADD_CATEGORY, title: "Add Category" }
 ];

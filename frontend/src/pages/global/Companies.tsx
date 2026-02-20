@@ -1,4 +1,4 @@
-import CompanyTable from "../../components/common/CompanyTable";
+import CompanyTable from "../../components/common/company/CompanyTable";
 
 const Companies = () => {
 

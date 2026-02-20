@@ -133,3 +133,4 @@ export const signUp = async (req , res)=>{
             res.status(400).json({status : false , message : responseMessage.otp_invalid , error : error.message})
         }
     }
+
