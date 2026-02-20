@@ -60,10 +60,10 @@ const ManageUsersTable = () => {
     );
 
 return (
-  <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
-    <div className="px-6 py-4 border-b border-[#213a60]">
+  <div className="rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
+    <div className="px-6 py-4">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white">
+        <h2 className="text-lg font-medium text-white">
           User Management
         </h2>
 
@@ -78,7 +78,7 @@ return (
           <select
             value={userSortOrder}
             onChange={(e) => setUserSortOrder(e.target.value as any)}
-            className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100"
+            className="rounded-lg border border-[#2a466f] bg-[#0f2037] px-3 py-2 text-sm text-slate-100 transition hover:border-sky-400/50"
           >
             <option value="asc">Role: Admin → User</option>
             <option value="desc">Role: User → Admin</option>
@@ -86,7 +86,7 @@ return (
 
           <button
             onClick={() => navigate(ROUTES.ADMIN.ADD_USERS)}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition "
+            className="flex items-center justify-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]"
           >
             <Plus size={16} />
             Add User
@@ -172,7 +172,7 @@ return (
         usersList.map((user: any) => (
           <div
             key={user._id}
-            className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4"
+            className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5"
           >
             <div className="flex items-center justify-between">
               <div>

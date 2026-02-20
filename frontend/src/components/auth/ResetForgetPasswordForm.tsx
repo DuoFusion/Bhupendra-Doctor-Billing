@@ -20,7 +20,7 @@ const ResetForgetPasswordForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const inputClass =
-    "w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30";
+    "w-full rounded-xl border border-[#2a466f]/55 bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400/70 focus:outline-none focus:ring-2 focus:ring-sky-500/20";
 
   const getApiErrorMessage = (error: unknown, fallback: string) => {
     if ((error as AxiosError)?.isAxiosError) {
@@ -140,8 +140,8 @@ const ResetForgetPasswordForm = () => {
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md rounded-2xl border border-[#244066] bg-[#0b172a]/90 p-7">
-        <h2 className="text-center text-2xl font-semibold text-slate-100">Forgot Password</h2>
+      <div className="w-full max-w-md rounded-2xl bg-[#0b172a]/90 p-7 ring-1 ring-white/5">
+        <h2 className="text-center text-2xl font-medium text-slate-100">Forgot Password</h2>
         <p className="mt-1 text-center text-sm text-slate-400">
           {step === 1 && "Enter your email to receive OTP"}
           {step === 2 && "Enter OTP sent to your email"}
@@ -175,7 +175,7 @@ const ResetForgetPasswordForm = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-60"
+              className="w-full rounded-xl bg-[#177db8] py-3 text-sm font-medium text-white transition hover:bg-[#1f8bcb] disabled:opacity-60"
             >
               {sendOtpMutation.isPending ? "Sending..." : "Send OTP"}
             </button>
@@ -196,14 +196,14 @@ const ResetForgetPasswordForm = () => {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="w-full rounded-xl border border-[#36557f] bg-[#10243f] py-3 text-sm font-medium text-slate-200 transition hover:border-sky-400/60"
+                className="w-full rounded-xl bg-[#10243f] py-3 text-sm font-medium text-slate-200 transition hover:bg-[#153252]"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-60"
+                className="w-full rounded-xl bg-[#177db8] py-3 text-sm font-medium text-white transition hover:bg-[#1f8bcb] disabled:opacity-60"
               >
                 {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
               </button>
@@ -231,14 +231,14 @@ const ResetForgetPasswordForm = () => {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="w-full rounded-xl border border-[#36557f] bg-[#10243f] py-3 text-sm font-medium text-slate-200 transition hover:border-sky-400/60"
+                className="w-full rounded-xl bg-[#10243f] py-3 text-sm font-medium text-slate-200 transition hover:bg-[#153252]"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-60"
+                className="w-full rounded-xl bg-[#177db8] py-3 text-sm font-medium text-white transition hover:bg-[#1f8bcb] disabled:opacity-60"
               >
                 {resetPasswordMutation.isPending ? "Resetting..." : "Reset Password"}
               </button>
@@ -252,7 +252,7 @@ const ResetForgetPasswordForm = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.AUTH.SIGNIN)}
-              className="w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold text-white transition hover:brightness-110"
+              className="w-full rounded-xl bg-[#177db8] py-3 text-sm font-medium text-white transition hover:bg-[#1f8bcb]"
             >
               Go to Sign In
             </button>

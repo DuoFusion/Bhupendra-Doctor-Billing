@@ -190,7 +190,7 @@ const GenerateBillForm = () => {
 
 return (
   <div className="min-h-screen bg-[#050d1c] text-slate-100 p-4 sm:p-6">
-    <div className="max-w-6xl mx-auto bg-[#0b172a]/95 border border-[#1e3354] rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
+    <div className="mx-auto max-w-6xl rounded-2xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5 sm:p-6 md:p-8">
 
       <div className="mb-6">
         <button type="button" onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-400 hover:text-white transition">
@@ -198,7 +198,7 @@ return (
         </button>
       </div>
 
-      <h2 className="text-xl sm:text-2xl font-semibold mb-8">Generate Bill</h2>
+      <h2 className="mb-8 text-xl font-medium sm:text-2xl">Generate Bill</h2>
 
       <form className="space-y-10" onSubmit={handleSubmit}>
 
@@ -214,7 +214,7 @@ return (
         </div>
 
         <div className="border-t border-[#1e3354] pt-8">
-          <h3 className="text-lg font-semibold mb-6">Add Product Item</h3>
+          <h3 className="mb-6 text-lg font-medium">Add Product Item</h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
@@ -246,7 +246,7 @@ return (
           </div>
 
           <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <button type="button" className="px-6 py-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 rounded-lg transition w-full sm:w-auto" onClick={addItemToList} disabled={!selectedCompany}>Add Item</button>
+            <button type="button" className="w-full rounded-lg border border-sky-400/40 bg-[#177db8] px-6 py-2 text-white transition hover:bg-[#1f8bcb] sm:w-auto" onClick={addItemToList} disabled={!selectedCompany}>Add Item</button>
             <div className="text-sm text-slate-400 text-right">{items.length} item(s) added</div>
           </div>
 
@@ -291,7 +291,7 @@ return (
             <div className="flex justify-between text-sm mt-2"><span>Bill Discount</span><span>- ₹{(Number(billDiscount) || 0).toFixed(2)}</span></div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-[#1e3354]">
               <span className="text-sm text-slate-400">Grand Total</span>
-              <span className="text-lg font-semibold text-white">₹{grandTotal.toFixed(2)}</span>
+              <span className="text-lg font-medium text-white">₹{grandTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -335,7 +335,7 @@ return (
 
         <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8">
           <button type="button" onClick={() => navigate(-1)} className="px-6 py-2 rounded-lg bg-[#1f334f] hover:bg-[#29456b] transition w-full sm:w-auto">Cancel</button>
-          <button type="submit" className="px-6 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 transition shadow-md w-full sm:w-auto">Generate Bill</button>
+          <button type="submit" className="w-full rounded-lg border border-sky-400/40 bg-[#177db8] px-6 py-2 text-white transition hover:bg-[#1f8bcb] sm:w-auto">Generate Bill</button>
         </div>
 
       </form>

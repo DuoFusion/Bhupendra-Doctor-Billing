@@ -94,7 +94,7 @@ const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
 
   return (
     <div className="bg-[#0b172a]/95 rounded-xl border border-[#1e3354] p-6">
-      <h3 className="text-lg font-semibold mb-4">
+      <h3 className="mb-4 text-lg font-medium">
         {isEdit ? "Update Category" : "Add Category"}
       </h3>
 
@@ -156,7 +156,7 @@ const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white disabled:opacity-60"
+            className="rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-white transition hover:bg-[#1f8bcb] disabled:opacity-60"
           >
             {isEdit ? "Update" : "Add Category"}
           </button>

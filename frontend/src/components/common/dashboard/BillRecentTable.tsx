@@ -22,7 +22,7 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
       
       {/* Header */}
       <div className="px-6 py-4 border-b border-[#213a60] flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Bills</h2>
+        <h2 className="text-lg font-medium text-white">Bills</h2>
 
         <button
           onClick={() => navigate(ROUTES.BILL.GET_BILLS)}

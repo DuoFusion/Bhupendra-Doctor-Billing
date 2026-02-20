@@ -40,10 +40,10 @@ const CategoryTable = () => {
   if (isError) return <p className="p-6 text-center text-red-400">{(error as any)?.response?.data?.message || "Something went wrong"}</p>;
 
   return (
-    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
-      <div className="px-6 py-4 border-b border-[#213a60]">
+    <div className="rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Category List</h2>
+          <h2 className="text-lg font-medium text-white">Category List</h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 ps-2">
             <input
@@ -53,7 +53,7 @@ const CategoryTable = () => {
               className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
 
-            <button className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition " onClick={() => setShowAdd(true)}>
+            <button className="flex items-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]" onClick={() => setShowAdd(true)}>
               <Plus size={16} />
               Add Category
             </button>
@@ -79,7 +79,7 @@ const CategoryTable = () => {
                   {isAdmin && <td className="px-6 py-4 text-slate-400 whitespace-nowrap">Name : {item.user?.name} <br /> {item.user?.email}</td>}
                   <td className="px-6 py-4">
                     <div className="flex justify-center gap-3">
-                      <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"><Pencil size={16} /></button>
+                      <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"><Pencil size={16} /></button>
                       <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
                     </div>
                   </td>
@@ -97,7 +97,7 @@ const CategoryTable = () => {
       <div className="sm:hidden p-4 space-y-4">
         {categoriesList?.length > 0 ? (
           categoriesList.map((item: any, idx: number) => (
-            <div key={idx} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4">
+            <div key={idx} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-white font-medium">{item.name}</h3>
@@ -105,7 +105,7 @@ const CategoryTable = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"><Pencil size={16} /></button>
+                  <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"><Pencil size={16} /></button>
                   <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
                 </div>
               </div>

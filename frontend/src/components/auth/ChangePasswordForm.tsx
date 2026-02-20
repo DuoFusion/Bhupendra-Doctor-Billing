@@ -64,12 +64,12 @@ const ChangePasswordForm = () => {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30";
+    "w-full rounded-xl border border-[#2a466f]/55 bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400/70 focus:outline-none focus:ring-2 focus:ring-sky-500/20";
 
   return (
     <div className="min-h-[70vh] px-4 py-8">
-      <div className="mx-auto w-full max-w-lg overflow-hidden rounded-2xl border border-[#244066] bg-[#0b172a]/90 p-6">
-        <h2 className="text-center text-2xl font-semibold text-slate-100">Change Password</h2>
+      <div className="mx-auto w-full max-w-lg overflow-hidden rounded-2xl bg-[#0b172a]/90 p-6 ring-1 ring-white/5">
+        <h2 className="text-center text-2xl font-medium text-slate-100">Change Password</h2>
         <p className="mt-1 text-center text-sm text-slate-400">
           Update your account password securely
         </p>
@@ -88,7 +88,7 @@ const ChangePasswordForm = () => {
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+            <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.14em] text-slate-300">
               Old Password
             </label>
             <input
@@ -101,7 +101,7 @@ const ChangePasswordForm = () => {
           </div>
 
           <div>
-            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+            <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.14em] text-slate-300">
               New Password
             </label>
             <input
@@ -114,7 +114,7 @@ const ChangePasswordForm = () => {
           </div>
 
           <div>
-            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+            <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.14em] text-slate-300">
               Confirm Password
             </label>
             <input
@@ -130,14 +130,14 @@ const ChangePasswordForm = () => {
             <button
               type="button"
               onClick={() => navigate(ROUTES.USER.PROFILE)}
-              className="w-full rounded-xl border border-[#36557f] bg-[#10243f] py-3 text-sm font-medium text-slate-200 transition hover:border-sky-400/60 hover:text-white"
+              className="w-full rounded-xl bg-[#10243f] py-3 text-sm font-medium text-slate-200 transition hover:bg-[#153252] hover:text-white"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-xl bg-[#177db8] py-3 text-sm font-medium text-white transition hover:bg-[#1f8bcb] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {mutation.isPending ? "Updating..." : "Change Password"}
             </button>

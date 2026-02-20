@@ -20,7 +20,7 @@ const ProductRecentTable = ({ products = [], currentUserRole }: Props) => {
   return (
     <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
       <div className="px-6 py-4 border-b border-[#213a60] flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Products</h2>
+        <h2 className="text-lg font-medium text-white">Products</h2>
         <button
           onClick={() => navigate(ROUTES.PRODUCTS.GET_PRODUCTS)}
           className="flex items-center gap-2 text-sm text-sky-300 hover:text-sky-200 transition"

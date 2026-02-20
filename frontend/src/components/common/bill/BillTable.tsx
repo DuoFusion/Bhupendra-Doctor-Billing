@@ -89,10 +89,10 @@ const BillTable = () => {
     );
 
   return (
-    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
-      <div className="px-6 py-4 border-b border-[#213a60]">
+    <div className="rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Bill List</h2>
+          <h2 className="text-lg font-medium text-white">Bill List</h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <label htmlFor="bill-search" className="sr-only">Search bills</label>
@@ -127,7 +127,7 @@ const BillTable = () => {
 
             <button
               onClick={() => navigate(ROUTES.BILL.GENERATE_BILL)}
-              className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition"
+              className="flex items-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]"
             >
               <Plus size={16} />
               Generate Bill
@@ -232,7 +232,7 @@ const BillTable = () => {
                         onClick={() =>
                           navigate(ROUTES.BILL.UPDATE_BILL.replace(":id", bill._id))
                         }
-                        className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"
+                        className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"
                       >
                         <Pencil size={16} />
                       </button>
@@ -265,7 +265,7 @@ const BillTable = () => {
       <div className="sm:hidden p-4 space-y-4">
         {billsList?.length > 0 ? (
           billsList.map((bill: any) => (
-            <div key={bill._id} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4">
+            <div key={bill._id} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-white font-medium">{bill.billNumber}</h3>
@@ -284,7 +284,7 @@ const BillTable = () => {
                 <button onClick={() => navigate(ROUTES.BILL.VIEW_INVOICE.replace(':id', bill._id))} className="p-2 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600 hover:text-white transition">
                   <View size={16} />
                 </button>
-                <button onClick={() => navigate(ROUTES.BILL.UPDATE_BILL.replace(':id', bill._id))} className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition">
+                <button onClick={() => navigate(ROUTES.BILL.UPDATE_BILL.replace(':id', bill._id))} className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white">
                   <Pencil size={16} />
                 </button>
                 <button onClick={() => mutate(bill._id)} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition">

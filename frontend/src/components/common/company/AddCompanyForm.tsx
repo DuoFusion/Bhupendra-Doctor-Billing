@@ -91,7 +91,7 @@ const AddCompanyForm = () => {
 
   return (
     <div className="min-h-screen bg-[#050d1c] text-slate-100 p-6">
-      <div className="max-w-6xl mx-auto bg-[#0b172a]/95 border border-[#1e3354] rounded-2xl shadow-xl p-8">
+      <div className="mx-auto max-w-6xl rounded-2xl bg-[#0b172a]/95 p-8 ring-1 ring-white/5">
 
         <div className="mb-8">
           <button
@@ -273,7 +273,7 @@ const AddCompanyForm = () => {
 
             <button
               type="submit"
-              className="px-6 py-2 rounded-lg bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 transition shadow-md"
+              className="rounded-lg border border-sky-400/40 bg-[#177db8] px-6 py-2 text-white transition hover:bg-[#1f8bcb]"
             >
               {id ? "Update Company" : "Add Company"}
             </button>

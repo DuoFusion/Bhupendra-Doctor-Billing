@@ -1,7 +1,7 @@
 import { Auth_Collection, OTP_Collection } from "../../model";
 import bcrypt from "bcryptjs";
 import { responseMessage, status_code } from "../../common";
-import { otpSender } from "../../helper";
+import { buildOtpEmailTemplate, otpSender } from "../../helper";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import nodemailer from "nodemailer";
@@ -276,11 +276,21 @@ export const signUp = async (req , res)=>{
                 purpose: "reset",
             } as any);
 
+            const html = buildOtpEmailTemplate({
+                otp,
+                recipientName: user.name,
+                purposeText: "password reset",
+                supportEmail: process.env.EMAIL || "support@medicobilling.com",
+                brandName: "Medico Billing",
+                validMinutes: 3,
+                logoUrl: process.env.APP_LOGO_URL,
+            });
+
             await forgotPasswordTransporter.sendMail({
                 from: `Security Team <${process.env.EMAIL}>`,
                 to: email,
                 subject: "Password Reset OTP",
-                text: `Hello,\n\nYour password reset OTP is: ${otp}\nThis OTP is valid for 3 minutes.\n\nIf you did not request this, please ignore this email.\n\n- Security Team`,
+                html,
             });
 
             return res.status(status_code.SUCCESS).json({

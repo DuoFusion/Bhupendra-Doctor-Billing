@@ -91,7 +91,7 @@ const AddUserForm = () => {
 
   return (
     <div className="min-h-[80vh] bg-[#050d1c] px-4 py-10">
-      <div className="max-w-md mx-auto bg-[#0b172a]/95 border border-[#1e3354] rounded-2xl p-8 shadow-xl relative">
+      <div className="relative mx-auto max-w-md rounded-2xl bg-[#0b172a]/95 p-8 ring-1 ring-white/5">
 
         <button
           onClick={() => navigate(ROUTES.ADMIN.MANAGE_USERS)}
@@ -100,7 +100,7 @@ const AddUserForm = () => {
           ← Back
         </button>
 
-        <h2 className="text-2xl font-semibold text-white text-center mb-8">
+        <h2 className="mb-8 text-center text-2xl font-medium text-white">
           {isEdit ? "Edit User" : "Add New User"}
         </h2>
 
@@ -110,7 +110,7 @@ const AddUserForm = () => {
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 bg-[#0f2037] text-white rounded-lg focus:ring-2 focus:ring-sky-500 outline-none"
+            className="w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
           />
 
           <input
@@ -118,7 +118,7 @@ const AddUserForm = () => {
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 bg-[#0f2037] text-white rounded-lg focus:ring-2 focus:ring-sky-500 outline-none"
+            className="w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
           />
 
           {!isEdit && (
@@ -127,14 +127,14 @@ const AddUserForm = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-[#0f2037] text-white rounded-lg focus:ring-2 focus:ring-sky-500 outline-none"
+              className="w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
             />
           )}
 
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full px-4 py-3 bg-[#0f2037] text-white rounded-lg focus:ring-2 focus:ring-sky-500 outline-none"
+            className="w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
           >
             <option value="user">User</option>
             <option value="admin">Admin</option>
@@ -143,7 +143,7 @@ const AddUserForm = () => {
           <button
             onClick={handleSubmit}
             disabled={mutation.isPending}
-            className="w-full bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 py-3 rounded-lg font-medium text-white transition"
+            className="w-full rounded-xl border border-sky-400/40 bg-[#177db8] py-3 text-sm font-medium text-white transition hover:bg-[#1f8bcb] disabled:opacity-60"
           >
             {mutation.isPending
               ? isEdit

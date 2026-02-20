@@ -75,10 +75,10 @@ const isAdmin = currentUser?.user?.role === "admin";
   if (isError) return <p>{error.message}</p>;
 
   return (
-    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
-      <div className="px-6 py-4 border-b border-[#213a60]">
+    <div className="rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Product List</h2>
+          <h2 className="text-lg font-medium text-white">Product List</h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <label htmlFor="product-search" className="sr-only">Search products</label>
@@ -106,7 +106,7 @@ const isAdmin = currentUser?.user?.role === "admin";
               aria-pressed={sortOrder === "desc"}
               title="Toggle sort order"
               onClick={() => setSortOrder((s) => (s === "asc" ? "desc" : "asc"))}
-              className="px-3 py-2 rounded-lg bg-[#0f2037] border border-[#2a466f] text-slate-100"
+              className="px-3 py-2 rounded-lg border border-[#2a466f] bg-[#0f2037] text-slate-100 transition hover:border-sky-400/50"
             >
               {sortOrder === "asc" ? "↑" : "↓"}
             </button>
@@ -115,7 +115,7 @@ const isAdmin = currentUser?.user?.role === "admin";
               <span className="ml-2 text-sm text-slate-200">Sorted by: <strong className="text-white">{sortBy === 'category' ? 'Category' : 'Price'} ({sortOrder === 'asc' ? 'asc' : 'desc'})</strong></span>
             )}
 
-            <button className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition " onClick={()=>navigate(ROUTES.PRODUCTS.ADD_PRODUCT)}>
+            <button className="flex items-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]" onClick={()=>navigate(ROUTES.PRODUCTS.ADD_PRODUCT)}>
               <FiPlus size={16} />
               Add Product
             </button>
@@ -201,7 +201,7 @@ const isAdmin = currentUser?.user?.role === "admin";
 
                 <td className="px-6 py-4">
                   <div className="flex justify-center gap-3">
-                    <button className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"    onClick={() => navigate(`/update-product/${item._id}`)}>
+                    <button className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"    onClick={() => navigate(`/update-product/${item._id}`)}>
                       <FiEdit size={16} />
                     </button>
 
@@ -229,7 +229,7 @@ const isAdmin = currentUser?.user?.role === "admin";
       <div className="sm:hidden p-4 space-y-4">
         {productsList?.length > 0 ? (
           productsList.map((item: any) => (
-            <div key={item._id} className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4">
+            <div key={item._id} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="text-white font-medium">{item.productName}</h3>
@@ -247,7 +247,7 @@ const isAdmin = currentUser?.user?.role === "admin";
                   <p>HSN: {item.hsnCode || '-'}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition" onClick={() => navigate(`/update-product/${item._id}`)}>
+                  <button className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white" onClick={() => navigate(`/update-product/${item._id}`)}>
                     <FiEdit size={16} />
                   </button>
                   <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={() => mutate(item._id)}>

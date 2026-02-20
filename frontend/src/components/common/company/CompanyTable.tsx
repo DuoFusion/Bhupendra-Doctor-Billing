@@ -49,10 +49,10 @@ const CompanyTable = () => {
     );
 
   return (
-    <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
-      <div className="px-6 py-4 border-b border-[#213a60]">
+    <div className="rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
+      <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Company List</h2>
+          <h2 className="text-lg font-medium text-white">Company List</h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 ps-2">
             <label htmlFor="company-search" className="sr-only">
@@ -67,7 +67,7 @@ const CompanyTable = () => {
             />
 
             <button
-              className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-sm px-4 py-2 rounded-lg transition "
+              className="flex items-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]"
               onClick={() => navigate(ROUTES.COMPANY.ADD_COMPANY)}
             >
               <Plus size={16} />
@@ -132,7 +132,7 @@ const CompanyTable = () => {
                   <td className="px-6 py-4">
                     <div className="flex justify-center gap-3">
                       <button
-                        className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"
+                        className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"
                         onClick={() =>
                           navigate(`/update-company/${company._id}`)
                         }
@@ -169,7 +169,7 @@ const CompanyTable = () => {
           companiesList.map((company: any) => (
             <div
               key={company._id}
-              className="bg-[#0b172a]/95 border border-[#1e3354] rounded-xl p-4"
+              className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5"
             >
               <div className="flex items-center gap-3">
                 <img
@@ -210,7 +210,7 @@ const CompanyTable = () => {
               <div className="mt-3 flex items-center gap-2">
                 <button
                   onClick={() => navigate(`/update-company/${company._id}`)}
-                  className="p-2 bg-sky-600/20 text-sky-300 rounded-lg hover:bg-gradient-to-r from-sky-600 to-blue-600 hover:text-white transition"
+                  className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"
                 >
                   <Pencil size={16} />
                 </button>

@@ -61,20 +61,20 @@ const ProfileCard = () => {
 
   return (
     <div className="space-y-5">
-      <div className="overflow-hidden rounded-3xl border border-[#244066] bg-gradient-to-b from-[#10243f] to-[#081628]">
+      <div className="overflow-hidden rounded-3xl bg-gradient-to-b from-[#10243f] to-[#081628] ring-1 ring-white/5">
         <div className="h-20 bg-gradient-to-r from-[#14335a] via-[#10294a] to-[#174171]" />
 
         <div className="-mt-10 px-6 pb-7">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-sky-400/60 bg-[#2f4778] text-3xl font-bold text-white">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-sky-400/60 bg-[#2f4778] text-3xl font-medium text-white">
             {isLoading ? "" : initial}
           </div>
 
           <div className="mt-4 text-center">
-            <h2 className="text-2xl font-semibold tracking-wide text-white">
+            <h2 className="text-2xl font-medium tracking-wide text-white">
               {isLoading ? "Loading..." : name}
             </h2>
 
-            <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-sky-400/35 bg-sky-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-sky-200">
+            <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-sky-200 ring-1 ring-sky-300/25">
               <Shield size={12} />
               {isLoading ? "" : role}
             </div>
@@ -83,7 +83,7 @@ const ProfileCard = () => {
           <button
             onClick={() => mutate()}
             disabled={isPending}
-            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#36557f] bg-[#10243f] px-5 py-2.5 text-sm font-medium text-slate-100 transition hover:border-red-400/60 hover:bg-red-500/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#10243f] px-5 py-2.5 text-sm font-medium text-slate-100 transition hover:bg-red-500/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <LogOut size={15} />
             {isPending ? "Signing out..." : "Log Out"}
@@ -91,9 +91,9 @@ const ProfileCard = () => {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-[#244066] bg-[#0b172a]/90">
-        <div className="border-b border-[#213a60] px-5 py-3">
-          <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-300">
+      <div className="overflow-hidden rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
+        <div className="px-5 py-3">
+          <h3 className="text-sm font-medium uppercase tracking-[0.12em] text-slate-300">
             User Information
           </h3>
         </div>

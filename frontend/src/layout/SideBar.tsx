@@ -67,7 +67,7 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
       >
         <div className="p-5">
           <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold tracking-wide text-sky-300">Medico</h2>
+            <h2 className="text-2xl font-medium tracking-wide text-sky-300">Medico</h2>
             <button
               className="rounded-lg border border-[#2a466f] bg-[#0f2037] p-1.5 text-slate-300 transition hover:border-sky-400/60 hover:text-sky-200 md:hidden"
               onClick={() => setOpen(false)}
@@ -83,10 +83,10 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
                 to={item.path}
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                  `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors duration-200 ${
                     isActive
-                      ? "bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-[0_8px_26px_rgba(29,78,216,0.35)]"
-                      : "text-slate-300 hover:bg-[#0f2037] hover:text-white"
+                      ? "border border-[#2c507d] bg-[#143154] text-white"
+                      : "border border-transparent text-slate-300 hover:bg-[#0f2037] hover:text-white"
                   }`
                 }
               >
@@ -110,7 +110,7 @@ const SideBar: React.FC<SideBarProps> = ({ open, setOpen }) => {
             >
               <div className="flex items-center gap-3 rounded-lg p-2">
                 <UserCircle size={28} className="text-slate-300" />
-                <p className="text-sm font-medium uppercase tracking-wide text-slate-200">
+                <p className="text-sm font-medium uppercase tracking-[0.1em] text-slate-200">
                   {data?.user?.name}
                 </p>
               </div>

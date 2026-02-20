@@ -108,14 +108,14 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-[#2a466f] bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30";
+    "w-full rounded-xl border border-[#2a466f]/55 bg-[#0a1a31] px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400/70 focus:outline-none focus:ring-2 focus:ring-sky-500/20";
 
   const fieldLabelClass =
-    "mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300";
+    "mb-2 block text-[11px] font-medium uppercase tracking-[0.14em] text-slate-300";
 
   if (isLoading) {
     return (
-      <div className="w-full overflow-hidden rounded-3xl border border-[#244066] bg-[#0b172a]/90 p-4 sm:p-7">
+      <div className="w-full overflow-hidden rounded-3xl bg-[#0b172a]/90 p-4 ring-1 ring-white/5 sm:p-7">
         <div className="text-center text-slate-300">Loading profile...</div>
       </div>
     );
@@ -123,9 +123,9 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
 
 
   return (
-    <div className="w-full overflow-hidden rounded-3xl border border-[#244066] bg-[#0b172a]/90 p-4 sm:p-7">
-      <div className="mb-6 rounded-2xl border border-[#2a466f] bg-[#0d1d34] px-5 py-5 text-center">
-        <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Personal Information</h2>
+    <div className="w-full overflow-hidden rounded-3xl bg-[#0b172a]/90 p-4 ring-1 ring-white/5 sm:p-7">
+      <div className="mb-6 rounded-2xl bg-[#0d1d34]/70 px-5 py-5 text-center">
+        <h2 className="text-2xl font-medium text-slate-100 sm:text-3xl">Personal Information</h2>
         <p className="mt-1 text-sm text-slate-400">Your registered details with e-Cyber Crime Portal</p>
       </div>
 
@@ -143,7 +143,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
 
       <div className="space-y-5">
         <div className="grid grid-cols-[40px_1fr] items-end gap-3">
-          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0a1a31] text-sky-300">
             <UserRound size={16} />
           </div>
           <div>
@@ -159,7 +159,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
         </div>
 
         <div className="grid grid-cols-[40px_1fr] items-end gap-3">
-          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0a1a31] text-sky-300">
             <Mail size={16} />
           </div>
           <div>
@@ -175,7 +175,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
         </div>
 
         <div className="grid grid-cols-[40px_1fr] items-end gap-3">
-          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0a1a31] text-sky-300">
             <Phone size={16} />
           </div>
           <div>
@@ -192,7 +192,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
         </div>
 
         <div className="grid grid-cols-[40px_1fr] items-end gap-3">
-          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0a1a31] text-sky-300">
             <Lock size={16} />
           </div>
           <div>
@@ -213,7 +213,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
         </div>
 
         <div className="grid grid-cols-[40px_1fr] items-end gap-3">
-          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0a1a31] text-sky-300">
             <MapPin size={16} />
           </div>
           <div>
@@ -229,7 +229,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
         </div>
 
         <div className="grid grid-cols-[40px_1fr] items-end gap-3">
-          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg border border-[#2a466f] bg-[#0a1a31] text-sky-300">
+          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0a1a31] text-sky-300">
             <PencilLine size={16} />
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
@@ -263,7 +263,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
         <button
           onClick={handleUpdateDetails}
           disabled={mutation.isPending}
-          className="mt-4 w-full rounded-xl border border-sky-400/40 bg-gradient-to-r from-[#1f5ea8] to-[#0f81b3] py-3 text-sm font-semibold tracking-wide text-white transition hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-4 w-full rounded-xl bg-[#177db8] py-3 text-sm font-medium tracking-wide text-white transition hover:bg-[#1f8bcb] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {mutation.isPending ? "Updating..." : "Update Details"}
         </button>
