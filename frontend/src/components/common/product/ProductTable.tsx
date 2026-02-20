@@ -1,11 +1,17 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
 import { deleteProduct, getAllProducts } from "../../../api/productApi";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
 import { getCurrentUser } from "../../../api/authApi";
 import { useConfirm } from "../confirm/ConfirmProvider";
+import TablePaginationControls from "../table/TablePaginationControls";
 
 const ProductTable = () => {
 
@@ -13,6 +19,10 @@ const ProductTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"category" | "price" | "">("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
 
   const navigate = useNavigate()
@@ -57,6 +67,21 @@ const ProductTable = () => {
 
     return sorted;
   }, [data?.products, searchTerm, sortBy, sortOrder]);
+
+  const productsTable = useReactTable({
+    data: productsList,
+    columns: [{ id: "row", accessorFn: (row) => row }],
+    state: { pagination },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const paginatedProducts = productsTable.getRowModel().rows.map((row) => row.original);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [searchTerm, sortBy, sortOrder]);
 
 const { data: currentUser } = useQuery({
     queryKey: ["currentUser"],
@@ -158,7 +183,7 @@ const isAdmin = currentUser?.user?.role === "admin";
           <tbody className="divide-y divide-[#1f3557]">
 
             {productsList?.length > 0 ? (
-              productsList.map((item : any , index : number) => (
+              paginatedProducts.map((item : any , index : number) => (
               <tr
                 key={index}
                 className="hover:bg-[#122642]/70 transition"
@@ -241,7 +266,7 @@ const isAdmin = currentUser?.user?.role === "admin";
       {/* Mobile list view */}
       <div className="sm:hidden p-4 space-y-4">
         {productsList?.length > 0 ? (
-          productsList.map((item: any) => (
+          paginatedProducts.map((item: any) => (
             <div key={item._id} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-start justify-between">
                 <div>
@@ -274,6 +299,8 @@ const isAdmin = currentUser?.user?.role === "admin";
           <div className="text-center text-slate-400">No Products Found</div>
         )}
       </div>
+
+      <TablePaginationControls table={productsTable} />
     </div>
   );
 };

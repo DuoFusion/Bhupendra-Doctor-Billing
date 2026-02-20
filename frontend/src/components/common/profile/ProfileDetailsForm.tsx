@@ -126,7 +126,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
     <div className="w-full overflow-hidden rounded-3xl bg-[#0b172a]/90 p-4 ring-1 ring-white/5 sm:p-7">
       <div className="mb-6 rounded-2xl bg-[#0d1d34]/70 px-5 py-5 text-center">
         <h2 className="text-2xl font-medium text-slate-100 sm:text-3xl">Personal Information</h2>
-        <p className="mt-1 text-sm text-slate-400">Your registered details with e-Cyber Crime Portal</p>
+        <p className="mt-1 text-sm text-slate-400">Your registered details with Medico Billing</p>
       </div>
 
       {successMessage && (
@@ -147,7 +147,7 @@ const ProfileDetailsForm: React.FC<Props> = ({ role }) => {
             <UserRound size={16} />
           </div>
           <div>
-            <label className={fieldLabelClass}>{role === "admin" ? "Full Name" : "Medical Name"}</label>
+            <label className={fieldLabelClass}>{userData.role === "admin" ? "Full Name" : "Medical Name"}</label>
             <input
               type="text"
               name="name"

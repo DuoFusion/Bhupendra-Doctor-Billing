@@ -1,12 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
 import { URL_KEYS } from "../../../constants/Url";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { deleteCompany, getAllCompanies } from "../../../api/companyApi";
 import { getCurrentUser } from "../../../api/authApi";
 import { useConfirm } from "../confirm/ConfirmProvider";
+import TablePaginationControls from "../table/TablePaginationControls";
 
 const CompanyTable = () => {
   const navigate = useNavigate();
@@ -20,6 +26,10 @@ const CompanyTable = () => {
 
   // Search state for companies
   const [companySearch, setCompanySearch] = useState("");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const companiesList = useMemo(() => {
     const items = data?.companies || [];
@@ -29,6 +39,21 @@ const CompanyTable = () => {
       (c.companyName || "").toString().toLowerCase().includes(q),
     );
   }, [data?.companies, companySearch]);
+
+  const companiesTable = useReactTable({
+    data: companiesList,
+    columns: [{ id: "row", accessorFn: (row) => row }],
+    state: { pagination },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const paginatedCompanies = companiesTable.getRowModel().rows.map((row) => row.original);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [companySearch]);
 
   const { data: currentUser } = useQuery({
     queryKey: ["currentUser"],
@@ -108,7 +133,7 @@ const CompanyTable = () => {
 
           <tbody className="divide-y divide-[#1f3557]">
             {companiesList?.length > 0 ? (
-              companiesList.map((company: any) => (
+              paginatedCompanies.map((company: any) => (
                 <tr
                   key={company._id}
                   className="hover:bg-[#122642]/70 transition"
@@ -179,7 +204,7 @@ const CompanyTable = () => {
 
       <div className="sm:hidden p-4 space-y-4">
         {companiesList?.length > 0 ? (
-          companiesList.map((company: any) => (
+          paginatedCompanies.map((company: any) => (
             <div
               key={company._id}
               className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5"
@@ -241,6 +266,8 @@ const CompanyTable = () => {
           <div className="text-center text-slate-400">No Companies Found</div>
         )}
       </div>
+
+      <TablePaginationControls table={companiesTable} />
     </div>
   );
 };

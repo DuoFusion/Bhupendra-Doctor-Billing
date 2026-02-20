@@ -1,10 +1,16 @@
-import  { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/Routes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { getAllUsers, deleteUser } from "../../api/userApi";
 import { useConfirm } from "../common/confirm/ConfirmProvider";
+import TablePaginationControls from "../common/table/TablePaginationControls";
 
 const ManageUsersTable = () => {
   const navigate = useNavigate();
@@ -19,6 +25,10 @@ const ManageUsersTable = () => {
   // Search and sort state
   const [userSearch, setUserSearch] = useState("");
   const [userSortOrder, setUserSortOrder] = useState<"asc" | "desc">("asc");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const usersList = useMemo(() => {
     const items = data?.users || [];
@@ -43,6 +53,21 @@ const ManageUsersTable = () => {
 
     return mapped;
   }, [data?.users, userSearch, userSortOrder]);
+
+  const usersTable = useReactTable({
+    data: usersList,
+    columns: [{ id: "row", accessorFn: (row) => row }],
+    state: { pagination },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const paginatedUsers = usersTable.getRowModel().rows.map((row) => row.original);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [userSearch, userSortOrder]);
 
   const { mutate } = useMutation({
     mutationFn: deleteUser,
@@ -122,7 +147,7 @@ return (
 
         <tbody className="divide-y divide-[#1f3557]">
           {usersList?.length > 0 ? (
-            usersList.map((user: any) => (
+            paginatedUsers.map((user: any) => (
               <tr
                 key={user._id}
                 className="hover:bg-[#122642]/70 transition"
@@ -182,7 +207,7 @@ return (
     {/* ================= MOBILE CARD VIEW ================= */}
     <div className="sm:hidden p-4 space-y-4">
       {usersList?.length > 0 ? (
-        usersList.map((user: any) => (
+        paginatedUsers.map((user: any) => (
           <div
             key={user._id}
             className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5"
@@ -233,6 +258,8 @@ return (
         </div>
       )}
     </div>
+
+    <TablePaginationControls table={usersTable} />
   </div>
   );
 

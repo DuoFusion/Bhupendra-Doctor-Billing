@@ -1,10 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { getCategories, deleteCategory } from "../../../api/categoryApi";
 import { getCurrentUser } from "../../../api/authApi";
 import AddCategoryForm from "./AddCategoryForm";
 import { useConfirm } from "../confirm/ConfirmProvider";
+import TablePaginationControls from "../table/TablePaginationControls";
 
 const CategoryTable = () => {
   const queryClient = useQueryClient();
@@ -19,6 +25,10 @@ const CategoryTable = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editItem, setEditItem] = useState<{ name: string; userId?: string } | null>(null);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const categoriesList = useMemo(() => {
     const payload = data?.data;
@@ -35,6 +45,21 @@ const CategoryTable = () => {
     const arr = (payload?.categories) || [];
     return arr.filter((n: string) => n.toString().toLowerCase().includes(search.toLowerCase())).map((n: string) => ({ name: n }));
   }, [data, isAdmin, search]);
+
+  const categoriesTable = useReactTable({
+    data: categoriesList,
+    columns: [{ id: "row", accessorFn: (row) => row }],
+    state: { pagination },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const paginatedCategories = categoriesTable.getRowModel().rows.map((row) => row.original);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [search, isAdmin]);
 
   const { mutate } = useMutation({ mutationFn: (payload :  { name: string }) => deleteCategory(payload), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }) });
 
@@ -86,7 +111,7 @@ const CategoryTable = () => {
 
           <tbody className="divide-y divide-[#1f3557]">
             {categoriesList?.length > 0 ? (
-              categoriesList.map((item: any, idx: number) => (
+              paginatedCategories.map((item: any, idx: number) => (
                 <tr key={idx} className="hover:bg-[#122642]/70 transition">
                   <td className="px-6 py-4">{item.name}</td>
                   {isAdmin && <td className="px-6 py-4 text-slate-400 whitespace-nowrap">Name : {item.user?.name} <br /> {item.user?.email}</td>}
@@ -109,7 +134,7 @@ const CategoryTable = () => {
 
       <div className="sm:hidden p-4 space-y-4">
         {categoriesList?.length > 0 ? (
-          categoriesList.map((item: any, idx: number) => (
+          paginatedCategories.map((item: any, idx: number) => (
             <div key={idx} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-center justify-between">
                 <div>
@@ -128,6 +153,8 @@ const CategoryTable = () => {
           <div className="text-center text-slate-400">No Categories Found</div>
         )}
       </div>
+
+      <TablePaginationControls table={categoriesTable} />
 
       {showAdd && (
         <div className="p-6">

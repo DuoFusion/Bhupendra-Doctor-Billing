@@ -1,11 +1,17 @@
-import  { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pencil, Trash2, Plus, View } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { getAllBills, deleteBill } from "../../../api/billApi";
 import { getCurrentUser } from "../../../api/authApi";
 import { useConfirm } from "../confirm/ConfirmProvider";
+import TablePaginationControls from "../table/TablePaginationControls";
 
 const BillTable = () => {
   const navigate = useNavigate();
@@ -27,6 +33,10 @@ const BillTable = () => {
   const [billSearch, setBillSearch] = useState("");
   const [billSortBy, setBillSortBy] = useState<"status" | "grandTotal" | "">("");
   const [billSortOrder, setBillSortOrder] = useState<"asc" | "desc">("asc");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const billsList = useMemo(() => {
     const items = data?.bills || [];
@@ -71,6 +81,21 @@ const BillTable = () => {
 
     return sorted;
   }, [data?.bills, billSearch, billSortBy, billSortOrder]);
+
+  const billsTable = useReactTable({
+    data: billsList,
+    columns: [{ id: "row", accessorFn: (row) => row }],
+    state: { pagination },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const paginatedBills = billsTable.getRowModel().rows.map((row) => row.original);
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [billSearch, billSortBy, billSortOrder]);
 
   const isAdmin = currentUser?.user?.role === "admin";
 
@@ -175,10 +200,12 @@ const BillTable = () => {
 
           <tbody className="divide-y divide-[#1f3557]">
             {billsList?.length > 0 ? (
-              billsList.map((bill: any, index: number) => (
+              paginatedBills.map((bill: any, index: number) => (
                 <tr key={bill._id} className="hover:bg-[#122642]/70 transition">
                   
-                  <td className="px-6 py-4">{index + 1}</td>
+                  <td className="px-6 py-4">
+                    {pagination.pageIndex * pagination.pageSize + index + 1}
+                  </td>
 
                   <td className="px-6 py-4">
                     <span
@@ -277,7 +304,7 @@ const BillTable = () => {
       {/* Mobile card view */}
       <div className="sm:hidden p-4 space-y-4">
         {billsList?.length > 0 ? (
-          billsList.map((bill: any) => (
+          paginatedBills.map((bill: any) => (
             <div key={bill._id} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-center justify-between">
                 <div>
@@ -310,6 +337,8 @@ const BillTable = () => {
           <div className="text-center text-slate-400">No Bills Found</div>
         )}
       </div>
+
+      <TablePaginationControls table={billsTable} />
     </div>
   );
 };
