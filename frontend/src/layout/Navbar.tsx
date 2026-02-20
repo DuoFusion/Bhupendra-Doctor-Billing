@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getCurrentUser, signout } from "../api/authApi";
 import { routes } from "../routers/RouteConfig";
 import { ROUTES } from "../constants/Routes";
+import { useConfirm } from "../components/common/confirm/ConfirmProvider";
 
 interface NavbarProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ setOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -77,6 +79,20 @@ const Navbar: React.FC<NavbarProps> = ({ setOpen }) => {
     }
   }, [isAuthenticated, showMenu]);
 
+  const handleLogout = async () => {
+    if (isPending) return;
+    const shouldLogout = await confirm({
+      title: "Logout",
+      message: "Are you sure you want to logout?",
+      confirmText: "Logout",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (!shouldLogout) return;
+    setShowMenu(false);
+    signoutUser();
+  };
+
   return (
     <header className="fixed left-0 right-0 top-0 z-40 border-b border-[#1f365a] bg-[#081426]/90 backdrop-blur-xl md:left-64">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -119,10 +135,7 @@ const Navbar: React.FC<NavbarProps> = ({ setOpen }) => {
                 </button>
                 <button
                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-[#142b46] hover:text-red-200"
-                  onClick={() => {
-                    setShowMenu(false);
-                    signoutUser();
-                  }}
+                  onClick={handleLogout}
                   disabled={isPending}
                 >
                   <LogOut size={15} />

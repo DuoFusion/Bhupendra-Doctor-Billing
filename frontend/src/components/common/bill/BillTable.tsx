@@ -5,10 +5,12 @@ import { ROUTES } from "../../../constants/Routes";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAllBills, deleteBill } from "../../../api/billApi";
 import { getCurrentUser } from "../../../api/authApi";
+import { useConfirm } from "../confirm/ConfirmProvider";
 
 const BillTable = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["bills"],
@@ -77,6 +79,17 @@ const BillTable = () => {
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["bills"] }),
   });
+
+  const handleDeleteBill = async (id: string) => {
+    const shouldDelete = await confirm({
+      title: "Delete Bill",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (shouldDelete) mutate(id);
+  };
   
 
   if (isLoading) return <p className="text-center p-6">Loading...</p>;
@@ -238,7 +251,7 @@ const BillTable = () => {
                       </button>
 
                       <button
-                        onClick={() => mutate(bill._id)}
+                        onClick={() => handleDeleteBill(bill._id)}
                         className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"
                       >
                         <Trash2 size={16} />
@@ -287,7 +300,7 @@ const BillTable = () => {
                 <button onClick={() => navigate(ROUTES.BILL.UPDATE_BILL.replace(':id', bill._id))} className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white">
                   <Pencil size={16} />
                 </button>
-                <button onClick={() => mutate(bill._id)} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition">
+                <button onClick={() => handleDeleteBill(bill._id)} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition">
                   <Trash2 size={16} />
                 </button>
               </div>

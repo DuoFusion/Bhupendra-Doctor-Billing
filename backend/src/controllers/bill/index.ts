@@ -10,7 +10,7 @@ export const getAllBills = async (req, res) => {
 
     if (req.user.role === "admin") {
       bills = await Bill_Collection.find({ isDelete: false })
-        .populate("user", "name email")
+        .populate("user", "name email phone address city state pincode")
         .populate(
           "items.product",
           "productName category hsnCode batch expiry gstPercent mrp sellingPrice company"
@@ -22,7 +22,7 @@ export const getAllBills = async (req, res) => {
         user: req.user._id,
         isDelete: false,
       })
-        .populate("user", "name email")
+        .populate("user", "name email phone address city state pincode")
         .populate(
           "items.product",
           "productName category hsnCode batch expiry gstPercent mrp sellingPrice company"
@@ -56,7 +56,7 @@ export const getBillById = async (req, res) => {
       });
 
     const bill = await Bill_Collection.findById(id)
-      .populate("user", "name email")
+      .populate("user", "name email phone address city state pincode")
       .populate("items.product", "productName category hsnCode batch expiry gstPercent mrp sellingPrice company")
       .populate("items.company"," companyName gstNumber phone email address city state pincode  logoImage" )
 

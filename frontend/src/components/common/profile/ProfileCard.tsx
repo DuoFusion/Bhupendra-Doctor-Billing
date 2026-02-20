@@ -4,10 +4,12 @@ import { AxiosError } from "axios";
 import { getCurrentUser, signout } from "../../../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
+import { useConfirm } from "../confirm/ConfirmProvider";
 
 const ProfileCard = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const { data, isLoading } = useQuery({
     queryKey: ["currentUser"],
@@ -59,6 +61,18 @@ const ProfileCard = () => {
 
   const initial = name ? name.charAt(0).toUpperCase() : "?";
 
+  const handleLogout = async () => {
+    if (isPending) return;
+    const shouldLogout = await confirm({
+      title: "Logout",
+      message: "Are you sure you want to logout?",
+      confirmText: "Logout",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (shouldLogout) mutate();
+  };
+
   return (
     <div className="space-y-5">
       <div className="overflow-hidden rounded-3xl bg-gradient-to-b from-[#10243f] to-[#081628] ring-1 ring-white/5">
@@ -81,7 +95,7 @@ const ProfileCard = () => {
           </div>
 
           <button
-            onClick={() => mutate()}
+            onClick={handleLogout}
             disabled={isPending}
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#10243f] px-5 py-2.5 text-sm font-medium text-slate-100 transition hover:bg-red-500/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
           >

@@ -6,10 +6,12 @@ import { URL_KEYS } from "../../../constants/Url";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCompany, getAllCompanies } from "../../../api/companyApi";
 import { getCurrentUser } from "../../../api/authApi";
+import { useConfirm } from "../confirm/ConfirmProvider";
 
 const CompanyTable = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["companies"],
@@ -39,6 +41,17 @@ const CompanyTable = () => {
     mutationFn: deleteCompany,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["companies"] }),
   });
+
+  const handleDeleteCompany = async (id: string) => {
+    const shouldDelete = await confirm({
+      title: "Delete Company",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (shouldDelete) mutate(id);
+  };
 
   if (isLoading) return <p className="text-center p-6">Loading...</p>;
   if (isError)
@@ -141,7 +154,7 @@ const CompanyTable = () => {
                       </button>
 
                       <button
-                        onClick={() => mutate(company._id)}
+                        onClick={() => handleDeleteCompany(company._id)}
                         className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"
                       >
                         <Trash2 size={16} />
@@ -216,7 +229,7 @@ const CompanyTable = () => {
                 </button>
 
                 <button
-                  onClick={() => mutate(company._id)}
+                  onClick={() => handleDeleteCompany(company._id)}
                   className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"
                 >
                   <Trash2 size={16} />

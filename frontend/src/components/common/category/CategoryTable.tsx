@@ -4,9 +4,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCategories, deleteCategory } from "../../../api/categoryApi";
 import { getCurrentUser } from "../../../api/authApi";
 import AddCategoryForm from "./AddCategoryForm";
+import { useConfirm } from "../confirm/ConfirmProvider";
 
 const CategoryTable = () => {
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const { data, isLoading, isError, error } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
   const { data: currentUser } = useQuery({ queryKey: ["currentUser"], queryFn: getCurrentUser });
@@ -35,6 +37,17 @@ const CategoryTable = () => {
   }, [data, isAdmin, search]);
 
   const { mutate } = useMutation({ mutationFn: (payload :  { name: string }) => deleteCategory(payload), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }) });
+
+  const handleDeleteCategory = async (payload: { name: string }) => {
+    const shouldDelete = await confirm({
+      title: "Delete Category",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (shouldDelete) mutate(payload);
+  };
 
   if (isLoading) return <p className="p-6 text-center">Loading...</p>;
   if (isError) return <p className="p-6 text-center text-red-400">{(error as any)?.response?.data?.message || "Something went wrong"}</p>;
@@ -80,7 +93,7 @@ const CategoryTable = () => {
                   <td className="px-6 py-4">
                     <div className="flex justify-center gap-3">
                       <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"><Pencil size={16} /></button>
-                      <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
+                      <button onClick={() => handleDeleteCategory({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
                     </div>
                   </td>
                 </tr>
@@ -106,7 +119,7 @@ const CategoryTable = () => {
 
                 <div className="flex items-center gap-2">
                   <button onClick={() => { setEditItem({ name: item.name, userId: item.user?._id }); setShowEdit(true); }} className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"><Pencil size={16} /></button>
-                  <button onClick={() => mutate({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
+                  <button onClick={() => handleDeleteCategory({ name: item.name })} className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button>
                 </div>
               </div>
             </div>

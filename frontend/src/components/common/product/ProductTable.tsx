@@ -5,6 +5,7 @@ import { deleteProduct, getAllProducts } from "../../../api/productApi";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
 import { getCurrentUser } from "../../../api/authApi";
+import { useConfirm } from "../confirm/ConfirmProvider";
 
 const ProductTable = () => {
 
@@ -16,6 +17,7 @@ const ProductTable = () => {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient();  
+  const confirm = useConfirm();
 
   const {data , isLoading , isError , error} = useQuery({
     queryKey : ["products"],
@@ -70,6 +72,17 @@ const isAdmin = currentUser?.user?.role === "admin";
         queryClient.invalidateQueries({ queryKey: ["products"] });
       },
     });
+
+  const handleDeleteProduct = async (id: string) => {
+    const shouldDelete = await confirm({
+      title: "Delete Product",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (shouldDelete) mutate(id);
+  };
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>{error.message}</p>;
@@ -205,7 +218,7 @@ const isAdmin = currentUser?.user?.role === "admin";
                       <FiEdit size={16} />
                     </button>
 
-                    <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={()=>mutate(item._id)}>
+                    <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={() => handleDeleteProduct(item._id)}>
                       <FiTrash2 size={16} />
                     </button>
                   </div>
@@ -250,7 +263,7 @@ const isAdmin = currentUser?.user?.role === "admin";
                   <button className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white" onClick={() => navigate(`/update-product/${item._id}`)}>
                     <FiEdit size={16} />
                   </button>
-                  <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={() => mutate(item._id)}>
+                  <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={() => handleDeleteProduct(item._id)}>
                     <FiTrash2 size={16} />
                   </button>
                 </div>

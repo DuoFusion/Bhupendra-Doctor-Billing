@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/Routes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllUsers, deleteUser } from "../../api/userApi";
+import { useConfirm } from "../common/confirm/ConfirmProvider";
 
 const ManageUsersTable = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["users"],
@@ -48,6 +50,17 @@ const ManageUsersTable = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
+
+  const handleDeleteUser = async (id: string) => {
+    const shouldDelete = await confirm({
+      title: "Delete User",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      intent: "danger",
+    });
+    if (shouldDelete) mutate(id);
+  };
 
   if (isLoading)
     return <p className="text-white p-6">Loading...</p>;
@@ -146,7 +159,7 @@ return (
                     </button>
 
                     <button
-                      onClick={() => mutate(user._id)}
+                      onClick={() => handleDeleteUser(user._id)}
                       className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"
                     >
                       <Trash2 size={16} />
@@ -206,7 +219,7 @@ return (
               </button>
 
               <button
-                onClick={() => mutate(user._id)}
+                onClick={() => handleDeleteUser(user._id)}
                 className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition"
               >
                 <Trash2 size={16} />
