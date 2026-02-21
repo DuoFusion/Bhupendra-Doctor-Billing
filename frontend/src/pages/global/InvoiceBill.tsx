@@ -26,15 +26,33 @@ const InvoiceBill = () => {
   const handleDownload = () => {
     if (!invoiceRef.current || !bill) return;
 
-    html2pdf()
+    const pdfOptions: any = {
+      margin: 0,
+      filename: `Invoice-${bill.billNumber}.pdf`,
+      image: { type: "jpeg", quality: 1 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+      },
+      pagebreak: { mode: ["css"] },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+
+    const worker = html2pdf()
+      .set(pdfOptions)
       .from(invoiceRef.current)
-      .set({
-        margin: 8,
-        filename: `Invoice-${bill.billNumber}.pdf`,
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .save();
+      .toPdf();
+
+    worker.get("pdf").then((pdf: any) => {
+      const totalPages = pdf.internal.getNumberOfPages();
+      for (let page = totalPages; page > 1; page--) {
+        pdf.deletePage(page);
+      }
+      worker.save();
+    });
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -59,8 +77,9 @@ const InvoiceBill = () => {
 
   return (
     <>
-      <div className="invoice-wrapper" ref={invoiceRef}>
-        <div className="invoice-accent-bar" />
+      <div className="invoice-page" ref={invoiceRef}>
+        <div className="invoice-wrapper">
+          <div className="invoice-accent-bar" />
 
         <div className="invoice-header">
           <div className="company-brand">
@@ -173,7 +192,8 @@ const InvoiceBill = () => {
           </div>
         </div>
 
-        <div className="footer">Thank you for your business.</div>
+          <div className="footer">Thank you for your business.</div>
+        </div>
       </div>
 
       <div className="button-wrapper">

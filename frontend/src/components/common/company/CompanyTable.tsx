@@ -1,59 +1,50 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
 import { URL_KEYS } from "../../../constants/Url";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { deleteCompany, getAllCompanies } from "../../../api/companyApi";
+import { keepPreviousData, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCompany, getAllCompaniesByQuery } from "../../../api/companyApi";
 import { getCurrentUser } from "../../../api/authApi";
 import { useConfirm } from "../confirm/ConfirmProvider";
-import TablePaginationControls from "../table/TablePaginationControls";
+import ServerPaginationControls from "../table/ServerPaginationControls";
 
 const CompanyTable = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const confirm = useConfirm();
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["companies"],
-    queryFn: getAllCompanies,
-  });
-
-  // Search state for companies
+  const [companySearchInput, setCompanySearchInput] = useState("");
   const [companySearch, setCompanySearch] = useState("");
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["companies", { page, limit, companySearch }],
+    queryFn: () =>
+      getAllCompaniesByQuery({
+        page,
+        limit,
+        search: companySearch,
+        sortBy: "createdAt",
+        order: "desc",
+      }),
+    placeholderData: keepPreviousData,
   });
-
-  const companiesList = useMemo(() => {
-    const items = data?.companies || [];
-    if (!companySearch) return items;
-    const q = companySearch.toString().toLowerCase();
-    return items.filter((c: any) =>
-      (c.companyName || "").toString().toLowerCase().includes(q),
-    );
-  }, [data?.companies, companySearch]);
-
-  const companiesTable = useReactTable({
-    data: companiesList,
-    columns: [{ id: "row", accessorFn: (row) => row }],
-    state: { pagination },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
-
-  const paginatedCompanies = companiesTable.getRowModel().rows.map((row) => row.original);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    const timer = setTimeout(() => {
+      setCompanySearch(companySearchInput.trim());
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [companySearchInput]);
+
+  useEffect(() => {
+    setPage(1);
   }, [companySearch]);
+
+  const companiesList = data?.companies || [];
+  const pagination = data?.pagination || { page: 1, limit, total: 0, totalPages: 0 };
 
   const { data: currentUser } = useQuery({
     queryKey: ["currentUser"],
@@ -99,8 +90,8 @@ const CompanyTable = () => {
             <input
               id="company-search"
               placeholder="Search by company name..."
-              value={companySearch}
-              onChange={(e) => setCompanySearch(e.target.value)}
+              value={companySearchInput}
+              onChange={(e) => setCompanySearchInput(e.target.value)}
               className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
 
@@ -133,11 +124,8 @@ const CompanyTable = () => {
 
           <tbody className="divide-y divide-[#1f3557]">
             {companiesList?.length > 0 ? (
-              paginatedCompanies.map((company: any) => (
-                <tr
-                  key={company._id}
-                  className="hover:bg-[#122642]/70 transition"
-                >
+              companiesList.map((company: any) => (
+                <tr key={company._id} className="hover:bg-[#122642]/70 transition">
                   <td className="px-6 py-4 min-w-[220px] font-medium flex items-center gap-3">
                     <img
                       src={
@@ -171,9 +159,7 @@ const CompanyTable = () => {
                     <div className="flex justify-center gap-3">
                       <button
                         className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"
-                        onClick={() =>
-                          navigate(`/update-company/${company._id}`)
-                        }
+                        onClick={() => navigate(`/update-company/${company._id}`)}
                       >
                         <Pencil size={16} />
                       </button>
@@ -190,10 +176,7 @@ const CompanyTable = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={isAdmin ? 9 : 8}
-                  className="text-center py-6 text-slate-400"
-                >
+                <td colSpan={isAdmin ? 9 : 8} className="text-center py-6 text-slate-400">
                   No Companies Found
                 </td>
               </tr>
@@ -204,11 +187,8 @@ const CompanyTable = () => {
 
       <div className="sm:hidden p-4 space-y-4">
         {companiesList?.length > 0 ? (
-          paginatedCompanies.map((company: any) => (
-            <div
-              key={company._id}
-              className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5"
-            >
+          companiesList.map((company: any) => (
+            <div key={company._id} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-center gap-3">
                 <img
                   src={
@@ -223,12 +203,8 @@ const CompanyTable = () => {
                 />
 
                 <div>
-                  <h3 className="text-white font-medium">
-                    {company.companyName}
-                  </h3>
-                  <p className="text-sm text-slate-400">
-                    {company.city}, {company.state}
-                  </p>
+                  <h3 className="text-white font-medium">{company.companyName}</h3>
+                  <p className="text-sm text-slate-400">{company.city}, {company.state}</p>
                 </div>
               </div>
 
@@ -238,11 +214,7 @@ const CompanyTable = () => {
                 <p>Email: {company.email}</p>
                 <p>Pincode: {company.pincode}</p>
 
-                {isAdmin && (
-                  <p className="text-slate-400">
-                    Added By: {company.user?.name}
-                  </p>
-                )}
+                {isAdmin && <p className="text-slate-400">Added By: {company.user?.name}</p>}
               </div>
 
               <div className="mt-3 flex items-center gap-2">
@@ -267,12 +239,20 @@ const CompanyTable = () => {
         )}
       </div>
 
-      <TablePaginationControls table={companiesTable} />
+      <ServerPaginationControls
+        page={pagination.page}
+        limit={pagination.limit}
+        total={pagination.total}
+        totalPages={pagination.totalPages}
+        currentCount={companiesList.length}
+        onPageChange={setPage}
+        onLimitChange={(nextLimit) => {
+          setLimit(nextLimit);
+          setPage(1);
+        }}
+      />
     </div>
   );
 };
 
 export default CompanyTable;
-
-
-

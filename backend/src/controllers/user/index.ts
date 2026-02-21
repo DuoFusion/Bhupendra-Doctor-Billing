@@ -1,13 +1,48 @@
 import { responseMessage, status_code } from "../../common";
-import { Auth_Collection } from "../../model";
-import { userValidaiton } from "../../validation";
+import { authModel } from "../../model";
+import { userValidation } from "../../validation";
+
+const toPositiveInt = (value: any, fallback: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+};
 
 //================ get all users controller==============
 export const getAllUsers = async (req , res)=>{
     try {
-        const users = await Auth_Collection.find({isDelete : false});
+        const hasPagination = req.query.page !== undefined || req.query.limit !== undefined;
+        const page = toPositiveInt(req.query.page, 1);
+        const limit = toPositiveInt(req.query.limit, 10);
+        const search = (req.query.search || "").toString().trim();
+        const sortBy = (req.query.sortBy || "createdAt").toString();
+        const order = (req.query.order || "desc").toString().toLowerCase() === "asc" ? 1 : -1;
 
-        res.status(status_code.SUCCESS).json({status : true , message : responseMessage.allUsersGet_success , users})
+        const query: any = { isDeleted: false };
+        if (search) {
+          const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+          query.$or = [{ name: regex }, { email: regex }, { role: regex }];
+        }
+
+        const total = await authModel.Auth_Collection.countDocuments(query);
+        let userQuery = authModel.Auth_Collection
+          .find(query)
+          .sort({ [sortBy]: order });
+        if (hasPagination) {
+          userQuery = userQuery.skip((page - 1) * limit).limit(limit);
+        }
+        const users = await userQuery;
+
+        res.status(status_code.SUCCESS).json({
+          status : true,
+          message : responseMessage.allUsersGet_success,
+          users,
+          pagination: {
+            page,
+            limit,
+            total,
+            totalPages: hasPagination ? Math.ceil(total / limit) : (total > 0 ? 1 : 0),
+          },
+        })
     } catch (error) {
         res.status(status_code.BAD_REQUEST).json({status : false , message : responseMessage.allUsersGet_failed , error})
     }
@@ -18,9 +53,9 @@ export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await Auth_Collection.findOne({
+    const user = await authModel.Auth_Collection.findOne({
       _id: id,
-      isDelete: false,
+      isDeleted: false,
     });
 
     if (!user) {
@@ -49,7 +84,7 @@ export const getUserById = async (req, res) => {
 //============ Update User controller ===============
 export const updateUser = async(req ,res)=>{
 
-    const {error} = userValidaiton.validate(req.body)
+    const {error} = userValidation.userValidaiton.validate(req.body)
 
     if (error) {
         return res.status(400).json({
@@ -62,7 +97,7 @@ export const updateUser = async(req ,res)=>{
         const {id} = req.params
         const {email , name , role} = req.body
         
-        const result = await Auth_Collection.findByIdAndUpdate(id , {email , name , role} , {new : true})
+        const result = await authModel.Auth_Collection.findByIdAndUpdate(id , {email , name , role} , {new : true})
         
         res.status(status_code.SUCCESS).json({status : true , message : responseMessage.userUpdate_success , result})
     } catch (error) {
@@ -76,7 +111,7 @@ export const deleteUser = async(req ,res)=>{
       try {
         const {id} = req.params
         
-        const result = await Auth_Collection.findByIdAndUpdate(id , {isDelete : true} , {new : true})
+        const result = await authModel.Auth_Collection.findByIdAndUpdate(id , {isDeleted : true} , {new : true})
         
         res.status(status_code.SUCCESS).json({status : true , message : responseMessage.userDeleted_success , result})
     } catch (error) {

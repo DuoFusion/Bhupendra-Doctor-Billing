@@ -11,6 +11,17 @@ export const getAllUsers = async () => {
   return response.data;
 };
 
+export const getAllUsersByQuery = async (params: {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+}) => {
+  const response = await API.get(URL_KEYS.USER.GET_USERS, { params });
+  return response.data;
+};
+
 export const getUserById = async (id : any) => {
   const response = await API.get(
     URL_KEYS.USER.GET_USER_BY_ID.replace(":id", id)

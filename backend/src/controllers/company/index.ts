@@ -1,16 +1,20 @@
 import fs from "fs";
 import path from "path";
-import { Company_Collection } from "../../model";
-import { companyDataValidation, companyUpdateDataValidation } from "../../validation";
+import { companyModel } from "../../model";
+import { companyValidation } from "../../validation";
 import { responseMessage, status_code } from "../../common";
 
 const uploadDir = path.join(process.cwd(), "upload");
+const toPositiveInt = (value: any, fallback: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+};
 
 
 // ================= Add New Company =================
 export const addNewCompany = async (req, res) => {
 
-  const { error } = companyDataValidation.validate(req.body);
+  const { error } = companyValidation.companyDataValidation.validate(req.body);
   if (error) {
     return res.status(400).json({
       status: false,
@@ -21,7 +25,7 @@ export const addNewCompany = async (req, res) => {
   try {
     const logoImage = req.file ? req.file.filename : null;
 
-    const result = await Company_Collection.create({
+    const result = await companyModel.Company_Collection.create({
       user: req.user._id,
       ...req.body,
       logoImage
@@ -47,21 +51,47 @@ export const addNewCompany = async (req, res) => {
 export const getAllCompanies = async (req, res) => {
 
   try {
-    let companies;
+    const hasPagination = req.query.page !== undefined || req.query.limit !== undefined;
+    const page = toPositiveInt(req.query.page, 1);
+    const limit = toPositiveInt(req.query.limit, 10);
+    const search = (req.query.search || "").toString().trim();
+    const sortBy = (req.query.sortBy || "createdAt").toString();
+    const order = (req.query.order || "desc").toString().toLowerCase() === "asc" ? 1 : -1;
 
-    if (req.user.role === "admin") {
-      companies = await Company_Collection.find({ isDelete: false })
-        .populate("user");
-    } else {
-      companies = await Company_Collection.find({
-        user: req.user._id,
-        isDelete: false
-      }).populate("user");
+    const query: any = { isDeleted: false };
+    if (req.user.role !== "admin") {
+      query.user = req.user._id;
     }
+    if (search) {
+      const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      query.$or = [
+        { companyName: regex },
+        { gstNumber: regex },
+        { phone: regex },
+        { email: regex },
+        { city: regex },
+        { state: regex },
+      ];
+    }
+
+    const total = await companyModel.Company_Collection.countDocuments(query);
+    let companyQuery = companyModel.Company_Collection.find(query)
+      .populate("user")
+      .sort({ [sortBy]: order });
+    if (hasPagination) {
+      companyQuery = companyQuery.skip((page - 1) * limit).limit(limit);
+    }
+    const companies = await companyQuery;
 
     res.status(status_code.SUCCESS).json({
       status: true,
-      companies
+      companies,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: hasPagination ? Math.ceil(total / limit) : (total > 0 ? 1 : 0),
+      },
     });
 
   } catch (error) {
@@ -81,9 +111,9 @@ export const getCompanyById = async (req, res) => {
     let company;
 
     if (req.user.role === "admin") {
-      company = await Company_Collection.findById(id);
+      company = await companyModel.Company_Collection.findById(id);
     } else {
-      company = await Company_Collection.findOne({
+      company = await companyModel.Company_Collection.findOne({
         _id: id,
         user: req.user._id
       });
@@ -114,7 +144,7 @@ export const getCompanyById = async (req, res) => {
 // ================= Update Company =================
 export const updateCompany = async (req, res) => {
 
-  const { error } = companyUpdateDataValidation.validate(req.body);
+  const { error } = companyValidation.companyUpdateDataValidation.validate(req.body);
   if (error) {
     return res.status(400).json({
       status: false,
@@ -128,9 +158,9 @@ export const updateCompany = async (req, res) => {
     let company;
 
     if (req.user.role === "admin") {
-      company = await Company_Collection.findById(id);
+      company = await companyModel.Company_Collection.findById(id);
     } else {
-      company = await Company_Collection.findOne({
+      company = await companyModel.Company_Collection.findOne({
         _id: id,
         user: req.user._id
       });
@@ -180,9 +210,9 @@ export const deleteCompany = async (req, res) => {
     let company;
 
     if (req.user.role === "admin") {
-      company = await Company_Collection.findById(id);
+      company = await companyModel.Company_Collection.findById(id);
     } else {
-      company = await Company_Collection.findOne({
+      company = await companyModel.Company_Collection.findOne({
         _id: id,
         user: req.user._id
       });
@@ -195,7 +225,7 @@ export const deleteCompany = async (req, res) => {
       });
     }
 
-    company.isDelete = true;
+    company.isDeleted = true;
     await company.save();
 
     res.status(status_code.SUCCESS).json({

@@ -11,7 +11,7 @@ const authSchema = new mongoose.Schema({
     city : {type : String , default : ""},
     state : {type : String , default : ""},
     pincode : {type : String , default : ""},
-    isDelete : {type : Boolean , default : false}
+    isDeleted : {type : Boolean , default : false}
 } , {timestamps : true  , versionKey : false})
 
 export const Auth_Collection = mongoose.model(modelName.authModelName , authSchema);

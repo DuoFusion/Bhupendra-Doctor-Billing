@@ -25,8 +25,6 @@ const OtpVerifyForm = () => {
     onSuccess: (data) => {
       localStorage.removeItem("email");
 
-      // localStorage.setItem("role", data.user.role);
-
       alert("OTP verified & Signin successful!");
 
       if (data.user.role === "admin") {

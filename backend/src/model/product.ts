@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String },
     batch: { type: String,  },
     expiry: { type: String , required : true},    
-    isDelete: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true, versionKey: false });
 

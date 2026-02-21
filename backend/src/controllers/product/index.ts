@@ -1,28 +1,51 @@
 import { responseMessage, status_code } from "../../common";
-import { Product_Collection } from "../../model";
-import { productDataValidation, productUpdateDataValidation } from "../../validation";
+import { productModel } from "../../model";
+import { productValidation } from "../../validation";
 
+const toPositiveInt = (value: any, fallback: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+};
 
 // ================= Get All Products (Admin) =================
 export const getAllProducts = async (req, res) => {
   try {
-    let products;
+    const hasPagination = req.query.page !== undefined || req.query.limit !== undefined;
+    const page = toPositiveInt(req.query.page, 1);
+    const limit = toPositiveInt(req.query.limit, 10);
+    const search = (req.query.search || "").toString().trim();
+    const sortBy = (req.query.sortBy || "createdAt").toString();
+    const order = (req.query.order || "desc").toString().toLowerCase() === "asc" ? 1 : -1;
 
-    if (req.user.role === "admin") {
-      products = await Product_Collection
-        .find({ isDelete: false })
-        .populate("company")
-        .populate("user", "name email role");
-    } else {
-      products = await Product_Collection
-        .find({ isDelete: false, user: req.user._id })
-        .populate("company")
-        .populate("user", "name email role");
+    const query: any = { isDeleted: false };
+    if (req.user.role !== "admin") {
+      query.user = req.user._id;
     }
+    if (search) {
+      const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      query.$or = [{ productName: regex }, { category: regex }, { hsnCode: regex }];
+    }
+
+    const total = await productModel.Product_Collection.countDocuments(query);
+    let productQuery = productModel.Product_Collection
+      .find(query)
+      .populate("company")
+      .populate("user", "name email role")
+      .sort({ [sortBy]: order });
+    if (hasPagination) {
+      productQuery = productQuery.skip((page - 1) * limit).limit(limit);
+    }
+    const products = await productQuery;
 
     res.status(status_code.SUCCESS).json({
       status: true,
       products,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: hasPagination ? Math.ceil(total / limit) : (total > 0 ? 1 : 0),
+      },
     });
 
   } catch (error) {
@@ -39,8 +62,8 @@ export const getAllProducts = async (req, res) => {
 // ================= Get My Products (User) =================
 export const getMyProducts = async (req, res) => {
   try {
-    const products = await Product_Collection
-      .find({ isDelete: false, user: req.user._id })
+    const products = await productModel.Product_Collection
+      .find({ isDeleted: false, user: req.user._id })
       .populate("company")
       .populate("user", "name email role");
 
@@ -63,7 +86,7 @@ export const getMyProducts = async (req, res) => {
 // ================= Add New Product =================
 export const addNewProduct = async (req, res) => {
 
-  const { error } = productDataValidation.validate(req.body);
+  const { error } = productValidation.productDataValidation.validate(req.body);
 
   if (error) {
     return res.status(400).json({
@@ -73,7 +96,7 @@ export const addNewProduct = async (req, res) => {
   }
 
   try {
-    const result = await Product_Collection.create({
+    const result = await productModel.Product_Collection.create({
       ...req.body,
       user: req.user._id,
     });
@@ -97,11 +120,11 @@ export const addNewProduct = async (req, res) => {
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product_Collection.findById(id)
+    const product = await productModel.Product_Collection.findById(id)
       .populate("company")
       .populate("user", "name email role");
 
-    if (!product || product.isDelete) {
+    if (!product || product.isDeleted) {
       return res.status(404).json({
         status: false,
         message: "Product not found",
@@ -125,7 +148,7 @@ export const getProductById = async (req, res) => {
 // ================= Update Product =================
 export const updateProduct = async (req, res) => {
 
-  const { error } = productUpdateDataValidation.validate(req.body);
+  const { error } = productValidation.productUpdateDataValidation.validate(req.body);
 
   if (error) {
     return res.status(400).json({
@@ -137,8 +160,8 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await Product_Collection.findOneAndUpdate(
-      { _id: id, user: req.user._id, isDelete: false },
+    const result = await productModel.Product_Collection.findOneAndUpdate(
+      { _id: id, user: req.user._id, isDeleted: false },
       req.body,
       { new: true }
     );
@@ -174,15 +197,15 @@ export const deleteProduct = async (req, res) => {
     let result;
 
     if (req.user.role === "admin") {
-        result = await Product_Collection.findOneAndUpdate(
-        { _id: id, isDelete: false },
-        { isDelete: true },
+        result = await productModel.Product_Collection.findOneAndUpdate(
+        { _id: id, isDeleted: false },
+        { isDeleted: true },
         { new: true }
       );
     } else {
-      result = await Product_Collection.findOneAndUpdate(
-        { _id: id, user: req.user._id, isDelete: false },
-        { isDelete: true },
+      result = await productModel.Product_Collection.findOneAndUpdate(
+        { _id: id, user: req.user._id, isDeleted: false },
+        { isDeleted: true },
         { new: true }
       );
     }

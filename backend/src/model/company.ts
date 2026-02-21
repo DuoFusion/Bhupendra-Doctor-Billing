@@ -18,7 +18,7 @@ const companySchema = new mongoose.Schema({
   state: { type: String,  },
   pincode: { type: Number,  },
   logoImage: { type: String },
-  isDelete: { type: Boolean, default: false }
+  isDeleted: { type: Boolean, default: false }
 
 }, { timestamps: true, versionKey: false });
 

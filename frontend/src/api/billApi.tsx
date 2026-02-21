@@ -11,6 +11,17 @@ export const getAllBills = async () => {
   return response.data;
 };
 
+export const getAllBillsByQuery = async (params: {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+}) => {
+  const response = await API.get(URL_KEYS.BILL.GET_BILLS, { params });
+  return response.data;
+};
+
 export const getBillById = async (id: string) => {
   const response = await API.get(
     URL_KEYS.BILL.GET_BILL_BY_ID.replace(":id", id)

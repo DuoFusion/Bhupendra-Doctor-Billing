@@ -1,16 +1,50 @@
 import { responseMessage, status_code } from "../../common";
-import { Category_Collection } from "../../model";
+import { categoryModel } from "../../model";
+
+const toPositiveInt = (value: any, fallback: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+};
 
 // ================= Get All Category =================
 export const getCategories = async (req, res) => {
   try {
-    if (req.user.role === "admin") {
-      const data = await Category_Collection.find({ isDelete: false }).populate("user", "name email");
-      return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.allCategoriesGet_success, data });
+    const hasPagination = req.query.page !== undefined || req.query.limit !== undefined;
+    const page = toPositiveInt(req.query.page, 1);
+    const limit = toPositiveInt(req.query.limit, 10);
+    const search = (req.query.search || "").toString().trim();
+    const sortBy = (req.query.sortBy || "createdAt").toString();
+    const order = (req.query.order || "desc").toString().toLowerCase() === "asc" ? 1 : -1;
+
+    const query: any = { isDeleted: false };
+    if (req.user.role !== "admin") {
+      query.userId = req.user._id;
+    }
+    if (search) {
+      const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      query.name = regex;
     }
 
-    const data = await Category_Collection.findOne({ user: req.user._id, isDelete: false }).populate("user", "name email");
-    return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.allCategoriesGet_success, data });
+    const total = await categoryModel.CategoryModel.countDocuments(query);
+    let categoryQuery = categoryModel.CategoryModel.find(query)
+      .populate("userId", "name email")
+      .sort({ [sortBy]: order });
+    if (hasPagination) {
+      categoryQuery = categoryQuery.skip((page - 1) * limit).limit(limit);
+    }
+    const data = await categoryQuery;
+
+    return res.status(status_code.SUCCESS).json({
+      status: true,
+      message: responseMessage.allCategoriesGet_success,
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: hasPagination ? Math.ceil(total / limit) : (total > 0 ? 1 : 0),
+      },
+    });
 
   } catch (error) {
     return res.status(status_code.BAD_REQUEST).json({ status: false, message: responseMessage.allCategoriesGet_failed, error });
@@ -27,21 +61,16 @@ export const addCategory = async (req, res) => {
     }
 
     const normalized = name.trim();
-
-    let doc = await Category_Collection.findOne({ user: req.user._id, isDelete: false });
-
-    if (doc) {
-      const exists = doc.categories.some((c) => (c || "").toString().trim().toLowerCase() === normalized.toLowerCase());
-      if (exists) {
-        return res.status(400).json({ status: false, message: "Category already exists." });
-      }
-
-      doc.categories.push(normalized);
-      await doc.save();
-      return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.categoryAdded_success, data: doc });
+    const existing = await categoryModel.CategoryModel.findOne({
+      userId: req.user._id,
+      name: { $regex: new RegExp(`^${normalized}$`, "i") },
+      isDeleted: false,
+    });
+    if (existing) {
+      return res.status(400).json({ status: false, message: "Category already exists." });
     }
 
-    const created = await Category_Collection.create({ user: req.user._id, categories: [normalized] });
+    const created = await categoryModel.CategoryModel.create({ userId: req.user._id, name: normalized });
     return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.categoryAdded_success, data: created });
 
   } catch (error) {
@@ -50,35 +79,38 @@ export const addCategory = async (req, res) => {
 };
 
 
-// ================= Update All Category =================
+// ================= Update Category =================
 export const updateCategory = async (req, res) => {
   try {
-    const { oldName, newName, userId } = req.body;
+    const { id, name } = req.body;
 
-    if (!oldName || !newName) {
-      return res.status(400).json({ status: false, message: "Both oldName and newName are required" });
+    if (!id || !name || typeof name !== "string" || !name.trim()) {
+      return res.status(400).json({ status: false, message: "Both id and name are required" });
     }
 
-    const targetUser = req.user.role === "admin" && userId ? userId : req.user._id;
-
-    const doc = await Category_Collection.findOne({ user: targetUser, isDelete: false });
-    if (!doc) return res.status(404).json({ status: false, message: "Category document not found" });
-
-    const oldNorm = oldName.toString().trim().toLowerCase();
-    const newNorm = newName.toString().trim();
-
-    const duplicate = doc.categories.some((c) => (c || "").toString().trim().toLowerCase() === newNorm.toLowerCase());
+    const query: any = { _id: id, isDeleted: false };
+    if (req.user.role !== "admin") {
+      query.userId = req.user._id;
+    }
+    const category = await categoryModel.CategoryModel.findOne(query);
+    if (!category) {
+      return res.status(404).json({ status: false, message: "Category not found" });
+    }
+    const normalized = name.trim();
+    const duplicate = await categoryModel.CategoryModel.findOne({
+      _id: { $ne: id },
+      userId: category.userId,
+      name: { $regex: new RegExp(`^${normalized}$`, "i") },
+      isDeleted: false,
+    });
     if (duplicate) {
       return res.status(400).json({ status: false, message: "Category already exists." });
     }
 
-    const idx = doc.categories.findIndex((c) => (c || "").toString().trim().toLowerCase() === oldNorm);
-    if (idx === -1) return res.status(404).json({ status: false, message: "Category to update not found" });
+    category.name = normalized;
+    await category.save();
 
-    doc.categories[idx] = newNorm;
-    await doc.save();
-
-    return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.categoryUpdate_success, data: doc });
+    return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.categoryUpdate_success, data: category });
 
   } catch (error) {
     return res.status(status_code.BAD_REQUEST).json({ status: false, message: responseMessage.categoryUpdate_failed, error });
@@ -86,29 +118,28 @@ export const updateCategory = async (req, res) => {
 };
 
 
-// =================Soft Delete  Category =================
+// ================= Soft Delete Category =================
 export const deleteCategory = async (req, res) => {
   try {
-    const { name, userId } = req.body;
+    const { id } = req.body;
 
-    if (!name) return res.status(400).json({ status: false, message: "Category name is required" });
+    if (!id) return res.status(400).json({ status: false, message: "Category id is required" });
 
-    const targetUser = req.user.role === "admin" && userId ? userId : req.user._id;
+    const query: any = { _id: id, isDeleted: false };
+    if (req.user.role !== "admin") {
+      query.userId = req.user._id;
+    }
 
-    const doc = await Category_Collection.findOne({ user: targetUser, isDelete: false });
-    if (!doc) return res.status(404).json({ status: false, message: "Category document not found" });
-
-    const norm = name.toString().trim().toLowerCase();
-    const filtered = doc.categories.filter((c) => (c || "").toString().trim().toLowerCase() !== norm);
-
-    if (filtered.length === doc.categories.length) {
+    const category = await categoryModel.CategoryModel.findOneAndUpdate(
+      query,
+      { isDeleted: true },
+      { new: true }
+    );
+    if (!category) {
       return res.status(404).json({ status: false, message: "Category not found" });
     }
 
-    doc.categories = filtered;
-    await doc.save();
-
-    return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.categoryDeleted_success, data: doc });
+    return res.status(status_code.SUCCESS).json({ status: true, message: responseMessage.categoryDeleted_success, data: category });
 
   } catch (error) {
     return res.status(status_code.BAD_REQUEST).json({ status: false, message: responseMessage.categoryDeleted_failed, error });

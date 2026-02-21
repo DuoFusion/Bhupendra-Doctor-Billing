@@ -1,10 +1,10 @@
 import express from "express";
-import authRouter from "./authRoute"
-import companyRouter from "./companyRoute"
-import userRouter from "./userRoute"
-import productRouter from "./productRoute"
-import billRouter from "./billRoute"
-import categoryRouter from "./categoryRoute"
+import authRouter from "./auth"
+import companyRouter from "./company"
+import userRouter from "./user"
+import productRouter from "./product"
+import billRouter from "./bill"
+import categoryRouter from "./category"
 import path from "path";
 
 const router = express.Router();

@@ -1,19 +1,11 @@
-import { Auth_Collection, OTP_Collection } from "../../model";
+import { authModel, otpModel } from "../../model";
 import bcrypt from "bcryptjs";
 import { responseMessage, status_code } from "../../common";
 import { buildOtpEmailTemplate, otpSender } from "../../helper";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import nodemailer from "nodemailer";
-import {
-    changePasswordValidation,
-    forgotPasswordResetValidation,
-    forgotPasswordSendOtpValidation,
-    forgotPasswordVerifyOtpValidation,
-    signInValidation,
-    signUpValidation,
-    updateProfileValidation
-} from "../../validation";
+import { authValidation } from "../../validation";
 dotenv.config()
 
 const forgotPasswordTransporter = nodemailer.createTransport({
@@ -29,7 +21,7 @@ const generateOtpCode = () => Math.floor(100000 + Math.random() * 900000).toStri
 //================ signUp controller =======================
 export const signUp = async (req , res)=>{
 
-    const {error} = signUpValidation.validate(req.body)
+    const {error} = authValidation.signUpValidation.validate(req.body)
 
     if (error) {
         return res.status(400).json({
@@ -42,12 +34,12 @@ export const signUp = async (req , res)=>{
         const {name , email , role , password} = req.body
         const hashedPassword = bcrypt.hashSync(password , 12)
 
-        const userExist = await Auth_Collection.findOne({email});
+        const userExist = await authModel.Auth_Collection.findOne({email});
         if(userExist){
             return res.status(status_code.BAD_REQUEST).json({status : false , message : responseMessage.user_alreadyExist , userExist})
         }
 
-        const result = await Auth_Collection.create({name , email , role , password : hashedPassword});
+        const result = await authModel.Auth_Collection.create({name , email , role , password : hashedPassword});
         
         res.status(status_code.SUCCESS).json({status : true , message : responseMessage.signUp_successfull})
     } catch (error) {
@@ -58,7 +50,7 @@ export const signUp = async (req , res)=>{
 
     //================ signIn controller =======================
     export const signIn = async (req ,res)=>{
-        const {error} = signInValidation.validate(req.body)
+        const {error} = authValidation.signInValidation.validate(req.body)
 
         if (error) {
             return res.status(400).json({
@@ -70,7 +62,7 @@ export const signUp = async (req , res)=>{
 
         try {
             const {email , password } = req.body
-            const user = await Auth_Collection.findOne({email})
+            const user = await authModel.Auth_Collection.findOne({email})
 
             if(!user){
                 return res.status(status_code.BAD_REQUEST).json({status : false , message : responseMessage.userNotFound })
@@ -119,7 +111,7 @@ export const signUp = async (req , res)=>{
     export const verifyOTP = async (req ,res)=>{
         try {
                 const {email , otp} = req.body;
-                const record = await OTP_Collection.findOne({email , otp, purpose: "signin"});
+                const record = await otpModel.OTP_Collection.findOne({email , otp, purpose: "signin"});
 
                 if(!record){
                     return res.status(status_code.BAD_REQUEST).json({status : false , message : "OTP is incorrect !" });
@@ -129,9 +121,9 @@ export const signUp = async (req , res)=>{
                     return res.status(status_code.BAD_REQUEST).json({status : false , message : "OTP is expired !"});
                 }
 
-                await OTP_Collection.deleteMany({email, purpose: "signin"} as any);
+                await otpModel.OTP_Collection.deleteMany({email, purpose: "signin"} as any);
 
-                const user = await Auth_Collection.findOne({email});
+                const user = await authModel.Auth_Collection.findOne({email});
                 const token = jwt.sign({user : {
                     _id : user._id,
                     name : user.name,
@@ -160,7 +152,7 @@ export const signUp = async (req , res)=>{
 
     /*============ Update Profile controller ===========*/
     export const updateProfile = async (req , res) => {
-        const {error} = updateProfileValidation.validate(req.body)
+        const {error} = authValidation.updateProfileValidation.validate(req.body)
 
         if (error) {
             return res.status(400).json({
@@ -185,7 +177,7 @@ export const signUp = async (req , res)=>{
 
             // Check if email is being changed and if it already exists
             if (email && email !== (req as any).user.email) {
-                const emailExists = await Auth_Collection.findOne({ email, _id: { $ne: userId } });
+                const emailExists = await authModel.Auth_Collection.findOne({ email, _id: { $ne: userId } });
                 if (emailExists) {
                     return res.status(status_code.BAD_REQUEST).json({
                         status: false,
@@ -194,7 +186,7 @@ export const signUp = async (req , res)=>{
                 }
             }
 
-            const updatedUser = await Auth_Collection.findByIdAndUpdate(
+            const updatedUser = await authModel.Auth_Collection.findByIdAndUpdate(
                 userId,
                 updateData,
                 { new: true, runValidators: true }
@@ -244,7 +236,7 @@ export const signUp = async (req , res)=>{
 
     /*============ Forgot Password: Send OTP ===========*/
     export const sendForgotPasswordOtp = async (req, res) => {
-        const { error } = forgotPasswordSendOtpValidation.validate(req.body);
+        const { error } = authValidation.forgotPasswordSendOtpValidation.validate(req.body);
 
         if (error) {
             return res.status(status_code.BAD_REQUEST).json({
@@ -255,7 +247,7 @@ export const signUp = async (req , res)=>{
 
         try {
             const { email } = req.body;
-            const user = await Auth_Collection.findOne({ email });
+            const user = await authModel.Auth_Collection.findOne({ email });
 
             if (!user) {
                 return res.status(status_code.NOT_FOUND).json({
@@ -268,8 +260,8 @@ export const signUp = async (req , res)=>{
             const otpHash = bcrypt.hashSync(otp, 10);
             const expireAt = new Date(Date.now() + 1000 * 60 * 3);
 
-            await OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
-            await OTP_Collection.create({
+            await otpModel.OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
+            await otpModel.OTP_Collection.create({
                 email,
                 otp: otpHash,
                 expireAt,
@@ -308,7 +300,7 @@ export const signUp = async (req , res)=>{
 
     /*============ Forgot Password: Verify OTP ===========*/
     export const verifyForgotPasswordOtp = async (req, res) => {
-        const { error } = forgotPasswordVerifyOtpValidation.validate(req.body);
+        const { error } = authValidation.forgotPasswordVerifyOtpValidation.validate(req.body);
 
         if (error) {
             return res.status(status_code.BAD_REQUEST).json({
@@ -319,7 +311,7 @@ export const signUp = async (req , res)=>{
 
         try {
             const { email, otp } = req.body;
-            const record = await OTP_Collection.findOne({ email, purpose: "reset" } as any).sort({ createdAt: -1 });
+            const record = await otpModel.OTP_Collection.findOne({ email, purpose: "reset" } as any).sort({ createdAt: -1 });
 
             if (!record) {
                 return res.status(status_code.BAD_REQUEST).json({
@@ -329,7 +321,7 @@ export const signUp = async (req , res)=>{
             }
 
             if (record.expireAt < new Date()) {
-                await OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
+                await otpModel.OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
                 return res.status(status_code.BAD_REQUEST).json({
                     status: false,
                     message: responseMessage.forgotPassword_otp_expired,
@@ -359,7 +351,7 @@ export const signUp = async (req , res)=>{
 
     /*============ Forgot Password: Reset Password ===========*/
     export const resetForgotPassword = async (req, res) => {
-        const { error } = forgotPasswordResetValidation.validate(req.body);
+        const { error } = authValidation.forgotPasswordResetValidation.validate(req.body);
 
         if (error) {
             return res.status(status_code.BAD_REQUEST).json({
@@ -378,7 +370,7 @@ export const signUp = async (req , res)=>{
                 });
             }
 
-            const user = await Auth_Collection.findOne({ email });
+            const user = await authModel.Auth_Collection.findOne({ email });
             if (!user) {
                 return res.status(status_code.NOT_FOUND).json({
                     status: false,
@@ -386,7 +378,7 @@ export const signUp = async (req , res)=>{
                 });
             }
 
-            const record = await OTP_Collection.findOne({ email, purpose: "reset" } as any).sort({ createdAt: -1 });
+            const record = await otpModel.OTP_Collection.findOne({ email, purpose: "reset" } as any).sort({ createdAt: -1 });
 
             if (!record) {
                 return res.status(status_code.BAD_REQUEST).json({
@@ -396,7 +388,7 @@ export const signUp = async (req , res)=>{
             }
 
             if (record.expireAt < new Date()) {
-                await OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
+                await otpModel.OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
                 return res.status(status_code.BAD_REQUEST).json({
                     status: false,
                     message: responseMessage.forgotPassword_otp_expired,
@@ -413,7 +405,7 @@ export const signUp = async (req , res)=>{
 
             user.password = bcrypt.hashSync(newPassword, 12);
             await user.save();
-            await OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
+            await otpModel.OTP_Collection.deleteMany({ email, purpose: "reset" } as any);
 
             return res.status(status_code.SUCCESS).json({
                 status: true,
@@ -430,7 +422,7 @@ export const signUp = async (req , res)=>{
 
     /*============ Change Password controller ===========*/
     export const changePassword = async (req, res) => {
-        const { error } = changePasswordValidation.validate(req.body);
+        const { error } = authValidation.changePasswordValidation.validate(req.body);
 
         if (error) {
             return res.status(status_code.BAD_REQUEST).json({
@@ -450,7 +442,7 @@ export const signUp = async (req , res)=>{
                 });
             }
 
-            const user = await Auth_Collection.findById(userId);
+            const user = await authModel.Auth_Collection.findById(userId);
 
             if (!user) {
                 return res.status(status_code.NOT_FOUND).json({

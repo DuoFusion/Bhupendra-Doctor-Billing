@@ -11,6 +11,17 @@ export const getAllCompanies = async () => {
   return response.data;
 };
 
+export const getAllCompaniesByQuery = async (params: {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+}) => {
+  const response = await API.get(URL_KEYS.COMPANY.GET_COMPANY, { params });
+  return response.data;
+};
+
 export const deleteCompany = async (id: string) => {
   const response = await API.delete(
     URL_KEYS.COMPANY.DELETE_COMPANY.replace(":id", id)

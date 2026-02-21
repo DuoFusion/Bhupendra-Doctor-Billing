@@ -59,7 +59,7 @@ const billSchema = new mongoose.Schema({
     default: BILL_STATUS.paid,
   },
 
-  isDelete : {type : Boolean , default : false}
+  isDeleted : {type : Boolean , default : false}
 
 }, { timestamps: true, versionKey: false });
 

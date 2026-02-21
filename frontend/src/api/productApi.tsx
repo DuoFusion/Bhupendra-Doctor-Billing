@@ -11,6 +11,17 @@ export const getAllProducts = async () => {
   return response.data;
 };
 
+export const getAllProductsByQuery = async (params: {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+}) => {
+  const response = await API.get(URL_KEYS.PRODUCT.GET_PRODUCT, { params });
+  return response.data;
+};
+
 export const addProduct = async (data: any) => {
   const response = await API.post(URL_KEYS.PRODUCT.ADD_PRODUCT,data);
   return response.data;

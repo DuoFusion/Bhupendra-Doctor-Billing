@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, View } from "lucide-react";
 import { ROUTES } from "../../../constants/Routes";
 
 type Props = {
@@ -19,8 +19,6 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
 
   return (
     <div className="bg-[#0b172a]/90 rounded-2xl border border-[#244066]">
-      
-      {/* Header */}
       <div className="px-6 py-4 border-b border-[#213a60] flex items-center justify-between">
         <h2 className="text-lg font-medium text-white">Bills</h2>
 
@@ -48,6 +46,7 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
               {isAdmin && <th className="px-6 py-4">Created By</th>}
               <th className="px-6 py-4">Sub Total</th>
               <th className="px-6 py-4">Grand Total</th>
+              <th className="px-6 py-4 text-center">View Invoice</th>
             </tr>
           </thead>
 
@@ -85,7 +84,7 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
                       : "-"}
                   </td>
 
-                  <td className="px-6 py-4">₹ {bill.totalGST}</td>
+                  <td className="px-6 py-4">Rs {bill.totalGST}</td>
 
                   <td className="px-6 py-4">{bill.items?.length}</td>
 
@@ -97,18 +96,27 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
                   )}
 
                   <td className="px-6 py-4 font-semibold text-sky-300">
-                    ₹ {bill.subTotal}
+                    Rs {bill.subTotal}
                   </td>
 
                   <td className="px-6 py-4 font-semibold text-green-400">
-                    ₹ {bill.grandTotal}
+                    Rs {bill.grandTotal}
+                  </td>
+
+                  <td className="px-6 py-4 text-center">
+                    <button
+                      className="p-2 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600 hover:text-white transition"
+                      onClick={() => navigate(ROUTES.BILL.VIEW_INVOICE.replace(":id", bill._id))}
+                    >
+                      <View size={16} />
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan={isAdmin ? 11 : 10}
+                  colSpan={isAdmin ? 12 : 11}
                   className="text-center py-6 text-slate-400"
                 >
                   No Recent Bills
@@ -119,7 +127,6 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
         </table>
       </div>
 
-      {/* Mobile compact view */}
       <div className="sm:hidden p-4 space-y-4">
         {recentBills.length > 0 ? (
           recentBills.map((bill: any) => (
@@ -130,13 +137,21 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
                   <p className="text-sm text-slate-400">{bill.items?.[0]?.productName || '-'}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-green-400 font-semibold">₹{bill.grandTotal}</p>
+                  <p className="text-green-400 font-semibold">Rs {bill.grandTotal}</p>
                   <p className="text-sm text-slate-400">{bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : ''}</p>
                 </div>
               </div>
               <div className="mt-3 text-sm text-slate-200">
                 <p>Items: {bill.items?.length || 0}</p>
                 {isAdmin && <p>By: {bill.user?.name || '-'}</p>}
+              </div>
+              <div className="mt-3 flex justify-end">
+                <button
+                  className="p-2 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600 hover:text-white transition"
+                  onClick={() => navigate(ROUTES.BILL.VIEW_INVOICE.replace(':id', bill._id))}
+                >
+                  <View size={16} />
+                </button>
               </div>
             </div>
           ))
@@ -149,6 +164,3 @@ const BillRecentTable = ({ bills = [], currentUserRole }: Props) => {
 };
 
 export default BillRecentTable;
-
-
-

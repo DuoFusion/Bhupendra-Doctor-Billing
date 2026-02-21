@@ -6,10 +6,10 @@ import { getCurrentUser } from "../../../api/authApi";
 interface Props {
   onClose?: () => void;
   initialName?: string;
-  userId?: string;
+  categoryId?: string;
 }
 
-const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
+const AddCategoryForm = ({ onClose, initialName, categoryId }: Props) => {
   const [name, setName] = useState(initialName || "");
   const queryClient = useQueryClient();
 
@@ -27,25 +27,25 @@ const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
     setName(initialName || "");
   }, [initialName]);
 
-  // Suggestions logic (works for both admin & user)
   const suggestions = useMemo(() => {
     const payload = categoriesData?.data;
     if (!payload) return [] as string[];
 
-    // Admin case (array of user documents)
-    if (Array.isArray(payload)) {
-      const targetUserId =
-        currentUser?.user?.role === "admin" && userId
-          ? userId
-          : currentUser?.user?._id;
+    const docs = Array.isArray(payload) ? payload : [];
+    const isAdmin = currentUser?.user?.role === "admin";
+    const editDoc = docs.find((d: any) => d._id === categoryId);
+    const targetUserId = isAdmin
+      ? (editDoc?.userId?._id || editDoc?.userId)
+      : currentUser?.user?._id;
 
-      const doc = payload.find((d: any) => d.user?._id === targetUserId);
-      return doc?.categories || [];
-    }
-
-    // Normal user case
-    return payload?.categories || [];
-  }, [categoriesData, currentUser, userId]);
+    return docs
+      .filter((d: any) => {
+        const uid = d?.userId?._id || d?.userId;
+        return isAdmin ? uid === targetUserId : uid === currentUser?.user?._id;
+      })
+      .map((d: any) => d?.name)
+      .filter(Boolean);
+  }, [categoriesData, currentUser, categoryId]);
 
   const addMut = useMutation({
     mutationFn: (payload: { name: string }) => addCategory(payload),
@@ -57,11 +57,7 @@ const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
   });
 
   const updateMut = useMutation({
-    mutationFn: (payload: {
-      oldName: string;
-      newName: string;
-      userId?: string;
-    }) => updateCategory(payload),
+    mutationFn: (payload: { id: string; name: string }) => updateCategory(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       setName("");
@@ -78,16 +74,14 @@ const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
 
     if (isEdit) {
       updateMut.mutate({
-        oldName: initialName!,
-        newName: name.trim(),
-        userId,
+        id: categoryId!,
+        name: name.trim(),
       });
     } else {
       addMut.mutate({ name: name.trim() });
     }
   };
 
-  // ✅ TanStack v5 fix
   const isLoading = isEdit ? updateMut.isPending : addMut.isPending;
   const isError = isEdit ? updateMut.isError : addMut.isError;
   const error = isEdit ? updateMut.error : addMut.error;
@@ -112,15 +106,14 @@ const AddCategoryForm = ({ onClose, initialName, userId }: Props) => {
           />
         </div>
 
-        {/* Live Suggestions */}
         {name && suggestions.length > 0 && (
           <div className="text-sm text-slate-400 space-y-1">
             {suggestions
-              .filter((s : any) =>
+              .filter((s: any) =>
                 s.toString().toLowerCase().includes(name.toLowerCase())
               )
               .slice(0, 6)
-              .map((s :any) => (
+              .map((s: any) => (
                 <div
                   key={s}
                   className="px-3 py-1 bg-[#0f2037] rounded cursor-pointer hover:bg-[#1f334f]"

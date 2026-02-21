@@ -1,102 +1,65 @@
-import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { useEffect, useState } from "react";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
-import { deleteProduct, getAllProducts } from "../../../api/productApi";
+import { deleteProduct, getAllProductsByQuery } from "../../../api/productApi";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/Routes";
 import { getCurrentUser } from "../../../api/authApi";
 import { useConfirm } from "../confirm/ConfirmProvider";
-import TablePaginationControls from "../table/TablePaginationControls";
+import ServerPaginationControls from "../table/ServerPaginationControls";
 
 const ProductTable = () => {
-
-  // Search and sorting state
+  const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"category" | "price" | "">("");
+  const [sortBy, setSortBy] = useState<"category" | "sellingPrice" | "">("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-
-  const navigate = useNavigate()
-  const queryClient = useQueryClient();  
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const confirm = useConfirm();
 
-  const {data , isLoading , isError , error} = useQuery({
-    queryKey : ["products"],
-    queryFn : getAllProducts,
-  })
-
-  const productsList = useMemo(() => {
-    const items = data?.products || [];
-
-    const filtered = searchTerm
-      ? items.filter((p: any) =>
-          (p.productName || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : items;
-
-    if (!sortBy) return filtered;
-
-    const sorted = [...filtered].sort((a: any, b: any) => {
-      if (sortBy === "category") {
-        const aa = (a.category || "").toString().toLowerCase();
-        const bb = (b.category || "").toString().toLowerCase();
-        if (aa < bb) return sortOrder === "asc" ? -1 : 1;
-        if (aa > bb) return sortOrder === "asc" ? 1 : -1;
-        return (a.productName || "").toString().localeCompare((b.productName || "").toString());
-      }
-
-      if (sortBy === "price") {
-        const pa = Number(a.sellingPrice || a.mrp || 0);
-        const pb = Number(b.sellingPrice || b.mrp || 0);
-        if (pa < pb) return sortOrder === "asc" ? -1 : 1;
-        if (pa > pb) return sortOrder === "asc" ? 1 : -1;
-        return (a.productName || "").toString().localeCompare((b.productName || "").toString());
-      }
-
-      return 0;
-    });
-
-    return sorted;
-  }, [data?.products, searchTerm, sortBy, sortOrder]);
-
-  const productsTable = useReactTable({
-    data: productsList,
-    columns: [{ id: "row", accessorFn: (row) => row }],
-    state: { pagination },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["products", { page, limit, searchTerm, sortBy, sortOrder }],
+    queryFn: () =>
+      getAllProductsByQuery({
+        page,
+        limit,
+        search: searchTerm,
+        sortBy: sortBy || "createdAt",
+        order: sortOrder,
+      }),
+    placeholderData: keepPreviousData,
   });
 
-  const paginatedProducts = productsTable.getRowModel().rows.map((row) => row.original);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchInput.trim());
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    setPage(1);
   }, [searchTerm, sortBy, sortOrder]);
 
-const { data: currentUser } = useQuery({
+  const productsList = data?.products || [];
+  const pagination = data?.pagination || { page: 1, limit, total: 0, totalPages: 0 };
+
+  const { data: currentUser } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,
-});
-  
-const isAdmin = currentUser?.user?.role === "admin";
-  
+  });
+
+  const isAdmin = currentUser?.user?.role === "admin";
 
   const { mutate } = useMutation({
-      mutationFn: deleteProduct,
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["products"] });
-      },
-    });
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
 
   const handleDeleteProduct = async (id: string) => {
     const shouldDelete = await confirm({
@@ -110,7 +73,7 @@ const isAdmin = currentUser?.user?.role === "admin";
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>{error.message}</p>;
+  if (isError) return <p>{(error as any)?.message}</p>;
 
   return (
     <div className="rounded-2xl bg-[#0b172a]/90 ring-1 ring-white/5">
@@ -124,8 +87,8 @@ const isAdmin = currentUser?.user?.role === "admin";
               id="product-search"
               aria-label="Search by product name"
               placeholder="Search by product name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 w-full sm:w-56"
             />
 
@@ -136,8 +99,8 @@ const isAdmin = currentUser?.user?.role === "admin";
               className="px-3 py-2 rounded-lg text-sm bg-[#0f2037] border border-[#2a466f] text-slate-100"
             >
               <option value="">No sort</option>
-              <option value="category">Category (A → Z)</option>
-              <option value="price">Price</option>
+              <option value="category">Category (A to Z)</option>
+              <option value="sellingPrice">Price</option>
             </select>
 
             <button
@@ -146,24 +109,23 @@ const isAdmin = currentUser?.user?.role === "admin";
               onClick={() => setSortOrder((s) => (s === "asc" ? "desc" : "asc"))}
               className="px-3 py-2 rounded-lg border border-[#2a466f] bg-[#0f2037] text-slate-100 transition hover:border-sky-400/50"
             >
-              {sortOrder === "asc" ? "↑" : "↓"}
+              {sortOrder === "asc" ? "?" : "?"}
             </button>
 
             {sortBy && (
-              <span className="ml-2 text-sm text-slate-200">Sorted by: <strong className="text-white">{sortBy === 'category' ? 'Category' : 'Price'} ({sortOrder === 'asc' ? 'asc' : 'desc'})</strong></span>
+              <span className="ml-2 text-sm text-slate-200">Sorted by: <strong className="text-white">{sortBy === 'category' ? 'Category' : 'Price'} ({sortOrder})</strong></span>
             )}
 
-            <button className="flex items-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]" onClick={()=>navigate(ROUTES.PRODUCTS.ADD_PRODUCT)}>
+            <button className="flex items-center gap-2 rounded-lg border border-sky-400/40 bg-[#177db8] px-4 py-2 text-sm text-white transition hover:bg-[#1f8bcb]" onClick={() => navigate(ROUTES.PRODUCTS.ADD_PRODUCT)}>
               <FiPlus size={16} />
               Add Product
             </button>
           </div>
         </div>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-slate-200 hidden sm:table">
-
           <thead className="bg-[#10223d] text-slate-300 uppercase text-[11px] tracking-[0.08em]">
             <tr>
               <th className="px-6 py-4">Product</th>
@@ -181,92 +143,54 @@ const isAdmin = currentUser?.user?.role === "admin";
           </thead>
 
           <tbody className="divide-y divide-[#1f3557]">
-
             {productsList?.length > 0 ? (
-              paginatedProducts.map((item : any , index : number) => (
-              <tr
-                key={index}
-                className="hover:bg-[#122642]/70 transition"
-              >
-                <td className="px-6 py-4 font-medium text-white whitespace-nowrap">
-                  {item.productName}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {item.company?.companyName}
-                </td>
-
-               {isAdmin && <td className="px-6 py-4 text-slate-400 whitespace-nowrap">
-                  Name : {item.user?.name} <br />
-                  {item.user?.email}
-                </td>}
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {item.category}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {item.hsnCode}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  ₹{item.mrp}
-                </td>
-
-                <td className="px-6 py-4 text-green-400 font-medium whitespace-nowrap">
-                  ₹{item.sellingPrice}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {item.gstPercent}%
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">
+              productsList.map((item: any) => (
+                <tr key={item._id} className="hover:bg-[#122642]/70 transition">
+                  <td className="px-6 py-4 font-medium text-white whitespace-nowrap">{item.productName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.company?.companyName}</td>
+                  {isAdmin && (
+                    <td className="px-6 py-4 text-slate-400 whitespace-nowrap">
+                      Name : {item.user?.name} <br />
+                      {item.user?.email}
+                    </td>
+                  )}
+                  <td className="px-6 py-4 whitespace-nowrap">{item.category}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.hsnCode}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">Rs {item.mrp}</td>
+                  <td className="px-6 py-4 text-green-400 font-medium whitespace-nowrap">Rs {item.sellingPrice}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.gstPercent}%</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {item.stockStatus === "Out Of Stock" ? (
-                      <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs">
-                        Out Of Stock
-                      </span>
+                      <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs">Out Of Stock</span>
                     ) : (
-                      <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs">
-                        {item.stock}
-                      </span>
+                      <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs">{item.stock}</span>
                     )}
-                </td>
-
-                <td className="px-6 py-4 text-slate-400 whitespace-nowrap">
-                  {item.expiry}
-                </td>
-
-                <td className="px-6 py-4">
-                  <div className="flex justify-center gap-3">
-                    <button className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white"    onClick={() => navigate(`/update-product/${item._id}`)}>
-                      <FiEdit size={16} />
-                    </button>
-
-                    <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={() => handleDeleteProduct(item._id)}>
-                      <FiTrash2 size={16} />
-                    </button>
-                  </div>
-                </td>
-
-              </tr>
+                  </td>
+                  <td className="px-6 py-4 text-slate-400 whitespace-nowrap">{item.expiry}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-center gap-3">
+                      <button className="rounded-lg bg-sky-600/20 p-2 text-sky-300 transition hover:bg-[#1f8bcb] hover:text-white" onClick={() => navigate(`/update-product/${item._id}`)}>
+                        <FiEdit size={16} />
+                      </button>
+                      <button className="p-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600 hover:text-white transition" onClick={() => handleDeleteProduct(item._id)}>
+                        <FiTrash2 size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={isAdmin ? 11 : 10} className="text-center py-6 text-slate-400">
-                  No Products Found
-                </td>
+                <td colSpan={isAdmin ? 11 : 10} className="text-center py-6 text-slate-400">No Products Found</td>
               </tr>
             )}
           </tbody>
-
         </table>
       </div>
 
-      {/* Mobile list view */}
       <div className="sm:hidden p-4 space-y-4">
         {productsList?.length > 0 ? (
-          paginatedProducts.map((item: any) => (
+          productsList.map((item: any) => (
             <div key={item._id} className="rounded-xl bg-[#0b172a]/95 p-4 ring-1 ring-white/5">
               <div className="flex items-start justify-between">
                 <div>
@@ -274,7 +198,7 @@ const isAdmin = currentUser?.user?.role === "admin";
                   <p className="text-sm text-slate-400">{item.company?.companyName || '-'}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-green-400 font-semibold">₹{item.sellingPrice}</p>
+                  <p className="text-green-400 font-semibold">Rs {item.sellingPrice}</p>
                   <p className="text-sm text-slate-400">{item.gstPercent}% GST</p>
                 </div>
               </div>
@@ -300,12 +224,20 @@ const isAdmin = currentUser?.user?.role === "admin";
         )}
       </div>
 
-      <TablePaginationControls table={productsTable} />
+      <ServerPaginationControls
+        page={pagination.page}
+        limit={pagination.limit}
+        total={pagination.total}
+        totalPages={pagination.totalPages}
+        currentCount={productsList.length}
+        onPageChange={setPage}
+        onLimitChange={(nextLimit) => {
+          setLimit(nextLimit);
+          setPage(1);
+        }}
+      />
     </div>
   );
 };
 
 export default ProductTable;
-
-
-

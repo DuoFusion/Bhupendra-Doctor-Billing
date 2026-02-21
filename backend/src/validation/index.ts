@@ -1,4 +1,4 @@
-export * from "./authValidaiton"
-export * from "./companyValidation"
-export * from "./userValidaition"
-export * from "./productValidation"
+export * as authValidation from "./auth"
+export * as companyValidation from "./company"
+export * as userValidation from "./user"
+export * as productValidation from "./product"

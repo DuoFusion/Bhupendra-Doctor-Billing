@@ -8,26 +8,17 @@ const CategorySelector = ({ value, onChange }: { value: string; onChange: (v: st
 
   const userCategories = (() => {
     const payload = categoriesData?.data;
-    if (!payload) return [] as string[];
+    if (!payload || !Array.isArray(payload)) return [] as string[];
 
-    // If backend returns an array (admin view), flatten all categories for admin
-    if (Array.isArray(payload)) {
-      const isAdmin = currentUser?.user?.role === "admin";
-      if (isAdmin) {
-        const all: string[] = [];
-        (payload as any[]).forEach((doc: any) => {
-          (doc.categories || []).forEach((c: string) => all.push(c));
-        });
-        // dedupe and return
-        return Array.from(new Set(all));
-      }
-
-      // for normal users, find the user's document
-      const doc = payload.find((d: any) => d.user?._id === currentUser?.user?._id);
-      return doc?.categories || [];
+    const isAdmin = currentUser?.user?.role === "admin";
+    if (isAdmin) {
+      return Array.from(new Set(payload.map((d: any) => d?.name).filter(Boolean)));
     }
 
-    return payload?.categories || [];
+    return payload
+      .filter((d: any) => (d?.userId?._id || d?.userId) === currentUser?.user?._id)
+      .map((d: any) => d?.name)
+      .filter(Boolean);
   })();
 
   if (!userCategories || userCategories.length === 0) {
@@ -45,4 +36,3 @@ const CategorySelector = ({ value, onChange }: { value: string; onChange: (v: st
 };
 
 export default CategorySelector;
-

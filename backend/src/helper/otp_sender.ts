@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { OTP_Collection } from "../model";
+import { otpModel } from "../model";
 import { responseMessage } from "../common";
 import { buildOtpEmailTemplate } from "./otp_email_template";
 
@@ -28,8 +28,8 @@ export const otpSender = async (email: string) => {
   const expireAt = new Date(Date.now() + 1000 * 60 * 3);
 
   try {
-    await OTP_Collection.deleteMany({ email, purpose: "signin" } as any);
-    await OTP_Collection.create({ email, otp, expireAt, purpose: "signin" } as any);
+    await otpModel.OTP_Collection.deleteMany({ email, purpose: "signin" } as any);
+    await otpModel.OTP_Collection.create({ email, otp, expireAt, purpose: "signin" } as any);
 
     const html = buildOtpEmailTemplate({
       otp: otpString,
